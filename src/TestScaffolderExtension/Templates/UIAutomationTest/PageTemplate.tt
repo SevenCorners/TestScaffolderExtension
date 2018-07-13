@@ -1,0 +1,32 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<# foreach(var usingStatement in Usings)
+{#>
+<#=$"using {usingStatement};"#>
+<#}#>
+
+namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
+{
+    public class <#=_automationTestOptions.PageClassName#> : BasePage
+    {
+        public <#=_automationTestOptions.PageClassName#>(IWebDriver driver): base(driver)
+        {
+        }
+
+        protected <#=_automationTestOptions.PageElementMapClassName#>  Map => new <#=_automationTestOptions.PageElementMapClassName#> (_browser);
+
+        public <#=_automationTestOptions.PageValidatorClassName#> Validate()
+        {
+            return new <#=_automationTestOptions.PageValidatorClassName#> (_browser);
+        }        
+
+        public void ExampleAction()
+        {
+            //Insert actions to perform on page elements.
+        }
+    }
+}

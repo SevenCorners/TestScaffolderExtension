@@ -1,0 +1,45 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<# foreach(var usingStatement in Usings)
+{#>
+<#=$"using {usingStatement};"#>
+<#}#>
+using <#=_testLocation.GetFullPathForNamespace().Trim('.')#>;
+
+namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
+{
+    [TestFixture]
+    public class <#=_automationTestOptions.TestClassName#> : <#=_automationTestOptions.TestTypeBaseClassName#>
+    {
+        private <#=_automationTestOptions.PageClassName#> <#=_automationTestOptions.PageTypeNameAsPrivateField#>;
+        private TestDataModel _testData;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            //Insert any needed prerequesites for running 
+        }
+
+        [Test]
+        //[Category(TestCategories.Area.Admin)]
+        [Category(TestCategories.TestTypes.<#=_automationTestOptions.TestTypeCategory#>)]
+        public void Example<#=_automationTestOptions.TestTypeCategory#>Test()
+        {
+            TryBlock(() =>
+            {
+                //Insert test steps and validation. 
+            });
+        }
+
+        #region Helpers
+        private void ExampleTestStep()
+        {
+            //Insert Actions from Page class. 
+        }
+        #endregion
+    }
+}
