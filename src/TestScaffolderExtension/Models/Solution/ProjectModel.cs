@@ -1,4 +1,7 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -11,26 +14,29 @@ namespace TestScaffolderExtension.Models.Solution
             _project = project;
         }
 
-        public override string Name => _project.Name;
         protected override ModelType ItemType => ModelType.Project;
 
-        protected override FileModel CopyFileFromPath(string tempFilePath)
+        protected override async Task<FileModel> CopyFileFromPathAsync(string tempFilePath)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             return new FileModel(this, _project.ProjectItems.AddFromFileCopy(tempFilePath));
         }
 
-        public override ProjectFolderModel AddFolder(string folderName)
+        public override async Task<ProjectFolderModel> AddFolderAsync(string folderName)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             return new ProjectFolderModel(this, _project.ProjectItems.AddFolder(folderName));
         }
 
-        public override void IterateChildren()
+        public override async Task IterateChildrenAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            Name = _project.Name;
             if (_project.ProjectItems?.GetEnumerator().MoveNext() ?? false)
             {
                 foreach(ProjectItem child in _project.ProjectItems)
                 {
-                    var childItem = SolutionModelFactory.BuildHierarchyTreeDown(this, child);
+                    var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, child);
                     if (childItem != null)
                     {
                         Children.Add(childItem);

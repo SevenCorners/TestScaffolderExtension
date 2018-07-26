@@ -1,5 +1,7 @@
-﻿using System;
-using EnvDTE;
+﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using System;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -10,21 +12,20 @@ namespace TestScaffolderExtension.Models.Solution
         public SolutionModel(EnvDTE.Solution solution) : base(null)
         {
             _solution = solution;
-            Name = GetName(solution.FullName);
-            IterateChildren();
         }
 
-        public override string Name { get; }
         protected override ModelType ItemType => ModelType.Solution;
 
-
-        public override void IterateChildren()
+        public override async Task IterateChildrenAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            Name = GetName(_solution.FullName);
+
             if (_solution.Projects?.GetEnumerator().MoveNext() ?? false)
             {
                 foreach (Project child in _solution.Projects)
                 {
-                    var childItem = SolutionModelFactory.BuildHierarchyTreeDown(this, child);
+                    var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, child);
                     if (childItem != null)
                     {
                         Children.Add(childItem);

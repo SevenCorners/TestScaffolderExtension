@@ -1,4 +1,6 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -11,15 +13,17 @@ namespace TestScaffolderExtension.Models.Solution
             _file = file;
         }
 
-        public override string Name => _file.Name;
         protected override ModelType ItemType => ModelType.File;
 
-        public override void IterateChildren()
+        public override async Task IterateChildrenAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            Name = _file.Name;
         }
 
-        internal void Open()
+        internal async Task OpenAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (_file.IsOpen)
             {
                 return;

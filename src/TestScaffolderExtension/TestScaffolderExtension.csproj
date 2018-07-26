@@ -59,7 +59,6 @@
     <Compile Include="Commands\MenuCommandBase.cs" />
     <Compile Include="Extensions\IServiceProviderExtensions.cs" />
     <Compile Include="Models\AutomationTestType.cs" />
-    <Compile Include="Models\CurrentSelection.cs" />
     <Compile Include="Models\Solution\FileModel.cs" />
     <Compile Include="Models\Solution\ProjectFolderModel.cs" />
     <Compile Include="Models\Solution\ProjectModelBase.cs" />

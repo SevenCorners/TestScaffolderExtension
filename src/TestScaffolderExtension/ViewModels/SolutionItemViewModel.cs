@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using TestScaffolderExtension.Models.Solution;
 
 namespace TestScaffolderExtension.ViewModels
@@ -43,13 +44,14 @@ namespace TestScaffolderExtension.ViewModels
         
         private bool _isSelected;
 
-        public SolutionItemViewModel CreateFolder(string newFolderName)
+        public async Task<SolutionItemViewModel> CreateFolderAsync(string newFolderName)
         {
             if (CanCreateFolder && Item is ProjectModelBase project)
             {
-                var newFolder = new SolutionItemViewModel(project.AddFolder(newFolderName));
-                Children.Add(newFolder);
-                return newFolder;
+                var newFolder = await project.AddFolderAsync(newFolderName);
+                var newFolderViewModel = new SolutionItemViewModel();
+                Children.Add(newFolderViewModel);
+                return newFolderViewModel;
             }
 
             throw new InvalidOperationException("Unable to create a folder from this object.");

@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Threading;
@@ -42,10 +43,10 @@ namespace TestScaffolderExtension.Commands
             AddCommandToMenu(commandService);
         }
 
-        protected override void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        {
-            menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatus;
-        }
+        //protected override void AddBeforeQueryStatus(OleMenuCommand menuCommand)
+        //{
+        //    menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatusAsync;
+        //}
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -61,23 +62,25 @@ namespace TestScaffolderExtension.Commands
             Instance = new CreateUnitTestsForMethodCommand(package, commandService);
         }
 
-        private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
-        {
-            if (!(sender is OleMenuCommand menuCommand)) return;
+        //private async void MenuCommand_BeforeQueryStatusAsync(object sender, EventArgs e)
+        //{
+        //    if (!(sender is OleMenuCommand menuCommand)) return;
 
-            menuCommand.Visible = false;
-            menuCommand.Enabled = false;
+        //    menuCommand.Visible = false;
+        //    menuCommand.Enabled = false;
 
-            var dte = ServiceProvider.Get<DTE>();
-            var currentSelection = new CurrentSelection(dte?.ActiveDocument.Selection as TextSelection);
-            if (currentSelection.SelectedMethod == null)
-            {
-                return;
-            }
+        //    var dte = await AsyncServiceProvider.GetAsync<DTE>();
 
-            menuCommand.Visible = true;
-            menuCommand.Enabled = true;
-        }
+        //    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+        //    var selectedText = dte?.ActiveDocument.Selection as TextSelection;
+        //    if (!(selectedText?.ActivePoint.CodeElement[vsCMElement.vsCMElementFunction] is CodeFunction selectedMethod))
+        //    {
+        //        return;
+        //    }
+
+        //    menuCommand.Visible = true;
+        //    menuCommand.Enabled = true;
+        //}
 
         protected override async Task ExecuteCommandAsync(OleMenuCommand menuCommand)
         {
@@ -90,10 +93,25 @@ namespace TestScaffolderExtension.Commands
             var root = await document.GetSyntaxRootAsync();
             var semanticModel = await document.GetSemanticModelAsync();
             var method = root.FindToken(snapshotPoint).Parent as MethodDeclarationSyntax;
+            if(method == null)
+            {
+                ShowError();
+            }
 
             var unitTestCreationOptions = new UnitTestCreationOptions(method, semanticModel);
 
             await CreateTestsAsync(unitTestCreationOptions);
+        }
+
+        private void ShowError()
+        {
+            VsShellUtilities.ShowMessageBox(
+                   ServiceProvider,
+                   "Please select a method to test.",
+                   "Invalid selection",
+                   OLEMSGICON.OLEMSGICON_WARNING,
+                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
 
         private async Task<SnapshotPoint> GetCaretPositionAsync()
@@ -121,10 +139,10 @@ namespace TestScaffolderExtension.Commands
             var locationForTest = await ShowCreateUnitTestsForMethodModalWindowAsync(unitTestCreationOptions);
             if (locationForTest != null)
             {
-                var unitTestFiles = UnitTestTemplateInstantiator.InstantiateUnitTestTemplate(locationForTest, unitTestCreationOptions);
+                var unitTestFiles = await UnitTestTemplateInstantiator.InstantiateUnitTestTemplateAsync(locationForTest, unitTestCreationOptions);
                 foreach (var file in unitTestFiles)
                 {
-                    file.Open();
+                    await file.OpenAsync();
                 }
             }
         }
@@ -133,7 +151,10 @@ namespace TestScaffolderExtension.Commands
         {
             var dte = await AsyncServiceProvider.GetAsync<DTE>();
 
-            var createUnitTestsViewModel = new CreateUnitTestsViewModel(new SolutionModel(dte.Solution), unitTestCreationOptions);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            var solutionModel = new SolutionModel(dte.Solution);
+            await solutionModel.IterateChildrenAsync();
+            var createUnitTestsViewModel = new CreateUnitTestsViewModel(solutionModel, unitTestCreationOptions);
 
             var createUnitTestsForMethodWindow = new CreateUnitTestsForMethodWindow(createUnitTestsViewModel)
             {

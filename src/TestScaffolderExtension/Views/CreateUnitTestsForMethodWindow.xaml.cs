@@ -44,7 +44,7 @@ namespace TestScaffolderExtension.Views
             Close();
         }
 
-        private void AddFolder_Click(object sender, RoutedEventArgs e)
+        private async void AddFolder_Click(object sender, RoutedEventArgs e)
         {
             if (_viewModel.SelectedItem.CanCreateFolder)
             {
@@ -57,7 +57,7 @@ namespace TestScaffolderExtension.Views
 
                 if (createFolderResult.HasValue && createFolderResult.Value)
                 {
-                    var newFolder = _viewModel.SelectedItem.CreateFolder(createFolderViewModel.NewFolderName);
+                    var newFolder = await _viewModel.SelectedItem.CreateFolderAsync(createFolderViewModel.NewFolderName);
                     newFolder.IsSelected = true;
                 }
             }

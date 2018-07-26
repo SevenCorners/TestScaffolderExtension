@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -23,14 +24,14 @@ namespace TestScaffolderExtension.Models.Solution
             return $"{_parent.GetFullPathForNamespace()}.{Name}";
         }
 
-        public abstract string Name { get; }
+        public string Name { get; protected set; }
         protected abstract ModelType ItemType { get; }
 
         private readonly SolutionModelBase _parent;
 
         public IList<SolutionModelBase> Children { get; protected set; }
 
-        public abstract void IterateChildren();
+        public abstract Task IterateChildrenAsync();
 
         protected enum ModelType
         {

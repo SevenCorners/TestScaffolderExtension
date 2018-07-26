@@ -1,5 +1,7 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using System;
+using System.Threading.Tasks;
 using TestScaffolderExtension.Models.Solution;
 
 namespace TestScaffolderExtension.Models
@@ -13,15 +15,15 @@ namespace TestScaffolderExtension.Models
         private const string SubProjectKind = "{66A26722-8FB5-11D2-AA7E-00C04F688DDE}"; // what makes this different from ProjectKind????
         private const string MiscellaneousFilesProjectKind = "{66A2671D-8FB5-11D2-AA7E-00C04F688DDE}"; // "created" automatically when non-solution files are opened in the solution context. Can be ignored.
 
-        public static SolutionModelBase BuildHierarchyPathUp(object item)
+        public static async Task<SolutionModelBase> BuildHierarchyPathUpAsync(object item)
         {
             if (item is Project project)
             {
-                return BuildHierarchyPathUp(project);
+                return await BuildHierarchyPathUpAsync(project);
             }
             else if (item is ProjectItem projectItem)
             {
-                return BuildHierarchyPathUp(projectItem);
+                return await BuildHierarchyPathUpAsync(projectItem);
             }
             else
             {
@@ -29,56 +31,59 @@ namespace TestScaffolderExtension.Models
             }
         }
 
-        public static SolutionModelBase BuildHierarchyTreeDown(SolutionModelBase parent, Project project)
+        public static async Task<SolutionModelBase> BuildHierarchyTreeDownAsync(SolutionModelBase parent, Project project)
         {
-            var current = BuildCurrentNode(parent, project);
-            current.IterateChildren();
+            var current = await BuildCurrentNodeAsync(parent, project);
+            await current.IterateChildrenAsync();
             return current;
         }
 
-        public static SolutionModelBase BuildHierarchyTreeDown(SolutionModelBase parent, ProjectItem projectItem)
+        public static async Task<SolutionModelBase> BuildHierarchyTreeDownAsync(SolutionModelBase parent, ProjectItem projectItem)
         {
-            var current = BuildCurrentNode(parent, projectItem);
-            current.IterateChildren();
+            var current = await BuildCurrentNodeAsync(parent, projectItem);
+            await current.IterateChildrenAsync();
             return current;
         }
 
-        private static SolutionModelBase BuildHierarchyPathUp(Project project)
+        private static async Task<SolutionModelBase> BuildHierarchyPathUpAsync(Project project)
         {
             SolutionModelBase parent = null;
 
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             var parentProject = project.ParentProjectItem;
 
             if (parentProject != null)
             {
                 if (parentProject.Kind == SubProjectKind)
                 {
-                    parent = BuildHierarchyPathUp(parentProject.Collection.Parent);
+                    parent = await BuildHierarchyPathUpAsync(parentProject.Collection.Parent);
                 }
                 else
                 {
-                    parent = BuildHierarchyPathUp(parentProject);
+                    parent = await BuildHierarchyPathUpAsync(parentProject);
                 }
             }
 
-            return BuildCurrentNode(parent, project);
+            return await BuildCurrentNodeAsync(parent, project);
         }
 
-        private static SolutionModelBase BuildHierarchyPathUp(ProjectItem projectItem)
+        private static async Task<SolutionModelBase> BuildHierarchyPathUpAsync(ProjectItem projectItem)
         {
             SolutionModelBase parent = null;
 
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             var parentItem = projectItem.Collection.Parent;
             if (parentItem != null)
             {
-                parent = BuildHierarchyPathUp(parentItem);
+                parent = await BuildHierarchyPathUpAsync(parentItem);
             }
 
-            return BuildCurrentNode(parent, projectItem);
+            return await BuildCurrentNodeAsync(parent, projectItem);
         }
 
-        private static SolutionModelBase BuildCurrentNode(SolutionModelBase parent, Project project)
+        private static async Task<SolutionModelBase> BuildCurrentNodeAsync(SolutionModelBase parent, Project project)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             switch (project.Kind)
             {
                 case ProjectKind:
@@ -92,8 +97,10 @@ namespace TestScaffolderExtension.Models
             }
         }
 
-        private static SolutionModelBase BuildCurrentNode(SolutionModelBase parent, ProjectItem projectItem)
+        private static async Task<SolutionModelBase> BuildCurrentNodeAsync(SolutionModelBase parent, ProjectItem projectItem)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             switch (projectItem.Kind)
             {
                 case FileKind:
