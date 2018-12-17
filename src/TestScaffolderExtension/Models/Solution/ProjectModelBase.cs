@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using EnvDTE;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -11,7 +12,15 @@ namespace TestScaffolderExtension.Models.Solution
         public override bool CanAddFile => true;
         public override bool CanAddFolder => true;
 
-        public abstract Task<ProjectFolderModel> AddFolderAsync(string folderName);
+        public async Task<ProjectFolderModel> AddFolderAsync(string folderName)
+        {
+            var newFolder = new ProjectFolderModel(this, await AddFolderInternalAsync(folderName));
+            await newFolder.IterateChildrenAsync();
+            Children.Add(newFolder);
+            return newFolder;
+        }
+
+        protected abstract Task<ProjectItem> AddFolderInternalAsync(string folderName);
 
         public async Task<FileModel> AddFileAsync(string fileName, string fileContents)
         {

@@ -22,10 +22,10 @@ namespace TestScaffolderExtension.Models.Solution
             return new FileModel(this, _project.ProjectItems.AddFromFileCopy(tempFilePath));
         }
 
-        public override async Task<ProjectFolderModel> AddFolderAsync(string folderName)
+        protected override async Task<ProjectItem> AddFolderInternalAsync(string folderName)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            return new ProjectFolderModel(this, _project.ProjectItems.AddFolder(folderName));
+            return _project.ProjectItems.AddFolder(folderName);
         }
 
         public override async Task IterateChildrenAsync()
