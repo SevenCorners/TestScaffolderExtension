@@ -38,7 +38,7 @@
 
         public bool CreateFolderCheckboxChecked
         {
-            get => this.UnitTestCreationOptions.ShouldCreateParentFolder;
+            get => this.UnitTestCreationOptions?.ShouldCreateParentFolder ?? true;
             set
             {
                 this.UnitTestCreationOptions.ShouldCreateParentFolder = value;
@@ -48,7 +48,7 @@
 
         public bool CreateBaseClassCheckboxChecked
         {
-            get => this.UnitTestCreationOptions.ShouldCreateUnitTestBaseClass;
+            get => this.UnitTestCreationOptions?.ShouldCreateUnitTestBaseClass ?? true;
             set
             {
                 this.UnitTestCreationOptions.ShouldCreateUnitTestBaseClass = value;
