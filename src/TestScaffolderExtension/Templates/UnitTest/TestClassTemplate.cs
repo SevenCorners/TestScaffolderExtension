@@ -70,9 +70,9 @@ namespace TestScaffolderExtension.Templates.UnitTest
             
             #line default
             #line hidden
-            this.Write("\r\n\t{\r\n\r\n");
+            this.Write("\r\n\t{\r\n");
             
-            #line 19 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 18 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
  foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
 {
             
@@ -80,14 +80,14 @@ namespace TestScaffolderExtension.Templates.UnitTest
             #line hidden
             this.Write("\t\t");
             
-            #line 21 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 20 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture($"private {parameter.SimpleTypeName} {parameter.NameAsPrivateField};"));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 22 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 21 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
 }
             
             #line default
@@ -95,7 +95,7 @@ namespace TestScaffolderExtension.Templates.UnitTest
             this.Write("\r\n        [TestInitialize]\r\n        public override void Arrange()\r\n        {\r\n  " +
                     "          base.Arrange();\r\n\r\n");
             
-            #line 29 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 28 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
  foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
 {
             
@@ -103,55 +103,55 @@ namespace TestScaffolderExtension.Templates.UnitTest
             #line hidden
             this.Write("\t\t\t");
             
-            #line 31 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 30 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture($"{parameter.NameAsPrivateField} = {parameter.Constructor.GetConstructorString(p => $@"/*{p.NameAsLocalVariable}*/")};"));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 32 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 31 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("        }\r\n\r\n        private ");
             
-            #line 35 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 34 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.MethodUnderTestReturnTypeName));
             
             #line default
             #line hidden
             this.Write(" Act()\r\n\t\t{\r\n            ");
             
-            #line 37 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
  if(_unitTestCreationOptions.MethodUnderTestReturnTypeName != "void") { 
             
             #line default
             #line hidden
             this.Write("return ");
             
-            #line 37 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
  } 
             
             #line default
             #line hidden
             
-            #line 37 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.ClassUnderTestName));
             
             #line default
             #line hidden
             this.Write(".");
             
-            #line 37 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.MethodUnderTestName));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 37 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
+            #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", _unitTestCreationOptions.MethodUnderTestParameters.Select(p => $"{p.NameAsPrivateField}"))));
             
             #line default
