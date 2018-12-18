@@ -31,7 +31,6 @@ namespace TestScaffolderExtension.PackageDetails
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    //[ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideAutoLoad(EditorWindowContextGuid, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideUIContextRule(EditorWindowContextGuid,
         name: "Test Scaffolder Package Load",

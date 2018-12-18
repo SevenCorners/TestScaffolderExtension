@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using System;
+﻿using System;
 using System.ComponentModel.Design;
-using Task = System.Threading.Tasks.Task;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Commands
 {
@@ -39,14 +39,8 @@ namespace TestScaffolderExtension.Commands
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuCommand = new OleMenuCommand(this.Execute, menuCommandID);
-            //AddBeforeQueryStatus(menuCommand);
             commandService.AddCommand(menuCommand);
         }
-
-        //protected virtual void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        //{
-        //    return;
-        //}
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.

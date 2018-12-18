@@ -1,12 +1,12 @@
-﻿using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using TestScaffolderExtension.Extensions;
 using TestScaffolderExtension.Models;
 using TestScaffolderExtension.Models.Solution;
@@ -40,30 +40,6 @@ namespace TestScaffolderExtension.Commands
             var commandService = await package.GetAsAsync<IMenuCommandService, OleMenuCommandService>();
             Instance = new CreateUIAutomationTestsCommand(package, commandService);
         }
-
-        //protected override void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        //{
-        //    menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatus;
-        //}
-
-        //private async void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
-        //{
-        //    if (!(sender is OleMenuCommand menuCommand)) return;
-
-        //    menuCommand.Visible = false;
-        //    menuCommand.Enabled = false;
-
-        //    var dte = await AsyncServiceProvider.GetAsAsync<DTE, DTE2>();
-        //    var selectedItems = await GetSolutionWindowSelectedItemsAsync(dte);
-
-        //    if (selectedItems.Count() != 1)
-        //    {
-        //        return;
-        //    }
-
-        //    menuCommand.Visible = true;
-        //    menuCommand.Enabled = true;
-        //}
 
         protected override async Task ExecuteCommandAsync(OleMenuCommand menuCommand)
         {

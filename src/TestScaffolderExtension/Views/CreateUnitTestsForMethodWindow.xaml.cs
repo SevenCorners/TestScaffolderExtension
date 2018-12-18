@@ -62,12 +62,5 @@ namespace TestScaffolderExtension.Views
                 }
             }
         }
-
-        //private void TreeView_Expanded(object sender, RoutedEventArgs e)
-        //{
-        //    var treeViewItem = e.OriginalSource as TreeViewItem;
-        //    var treeView = sender as TreeView;
-        //    treeViewItem.BringIntoView(new Rect(0, 0, treeView.ActualWidth, treeView.ActualHeight/2));
-        //}
     }
 }

@@ -1,4 +1,8 @@
-﻿using EnvDTE;
+﻿using System;
+using System.ComponentModel.Design;
+using System.Threading.Tasks;
+using System.Windows;
+using EnvDTE;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -8,12 +12,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Threading;
-using System;
-using System.ComponentModel.Design;
-using System.Threading.Tasks;
-using System.Windows;
 using TestScaffolderExtension.Extensions;
-using TestScaffolderExtension.Models;
 using TestScaffolderExtension.Models.Solution;
 using TestScaffolderExtension.Processors;
 using TestScaffolderExtension.ViewModels;
@@ -28,7 +27,6 @@ namespace TestScaffolderExtension.Commands
     internal sealed class CreateUnitTestsForMethodCommand : MenuCommandBase
     {
         private static readonly Guid _commandSet = new Guid("fd172596-85cf-4600-937d-4e3aa4401eb2");
-
         protected override int CommandId => 0x0100;
         protected override Guid CommandSet => _commandSet;
 
@@ -43,44 +41,19 @@ namespace TestScaffolderExtension.Commands
             AddCommandToMenu(commandService);
         }
 
-        //protected override void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        //{
-        //    menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatusAsync;
-        //}
-
         /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         public static async Task InitializeAsync(AsyncPackage package)
         {
-            // Verify the current thread is the UI thread - the call to AddCommand in CreateUIAutomationTestsCommand's constructor requires
+            // Verify the current thread is the UI thread - the call to AddCommand in CreateUnitTestsForMethodCommand's constructor requires
             // the UI thread.
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var commandService = await package.GetAsAsync<IMenuCommandService, OleMenuCommandService>();
             Instance = new CreateUnitTestsForMethodCommand(package, commandService);
         }
-
-        //private async void MenuCommand_BeforeQueryStatusAsync(object sender, EventArgs e)
-        //{
-        //    if (!(sender is OleMenuCommand menuCommand)) return;
-
-        //    menuCommand.Visible = false;
-        //    menuCommand.Enabled = false;
-
-        //    var dte = await AsyncServiceProvider.GetAsync<DTE>();
-
-        //    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-        //    var selectedText = dte?.ActiveDocument.Selection as TextSelection;
-        //    if (!(selectedText?.ActivePoint.CodeElement[vsCMElement.vsCMElementFunction] is CodeFunction selectedMethod))
-        //    {
-        //        return;
-        //    }
-
-        //    menuCommand.Visible = true;
-        //    menuCommand.Enabled = true;
-        //}
 
         protected override async Task ExecuteCommandAsync(OleMenuCommand menuCommand)
         {
@@ -93,7 +66,7 @@ namespace TestScaffolderExtension.Commands
             var root = await document.GetSyntaxRootAsync();
             var semanticModel = await document.GetSemanticModelAsync();
             var method = root.FindToken(snapshotPoint).Parent as MethodDeclarationSyntax;
-            if(method == null)
+            if (method == null)
             {
                 ShowError();
             }
