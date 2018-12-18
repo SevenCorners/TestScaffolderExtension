@@ -45,6 +45,11 @@ namespace TestScaffolderExtension.Commands
         {
             var dte = await AsyncServiceProvider.GetAsAsync<DTE, DTE2>();
             var selectedItems = await GetSolutionWindowSelectedItemsAsync(dte);
+            if(selectedItems.Count() != 1)
+            {
+                ShowError("Invalid Selection", "Please select only one item.");
+                return;
+            }
             var selectedProjectNode = await SolutionModelFactory.BuildHierarchyPathUpAsync(selectedItems.Single()) as ProjectModelBase;
 
             var automationTestOptions = await ShowCreateUIAutomationTestsWindowAsync(selectedProjectNode);
@@ -86,7 +91,6 @@ namespace TestScaffolderExtension.Commands
             var hierarchyItemObjects = new List<object>();
             foreach (var item in selectedItems.Cast<UIHierarchyItem>())
             {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 hierarchyItemObjects.Add(item.Object);
             }
             return hierarchyItemObjects;

@@ -8,7 +8,6 @@ namespace TestScaffolderExtension.Extensions
         public static async Task<T> GetAsync<T>(this IAsyncServiceProvider serviceProvider)
             where T : class
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             return await serviceProvider.GetServiceAsync(typeof(T)) as T;
         }
 
@@ -16,7 +15,6 @@ namespace TestScaffolderExtension.Extensions
             where T : class
             where U : class
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             return await serviceProvider.GetServiceAsync(typeof(T)) as U;
         }
     }

@@ -51,7 +51,6 @@ namespace TestScaffolderExtension.Commands
         /// <param name="e">Event args.</param>
         private async void Execute(object sender, EventArgs e)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!(sender is OleMenuCommand menuCommand)) return;
 
             try
@@ -71,5 +70,16 @@ namespace TestScaffolderExtension.Commands
         }
 
         protected abstract Task ExecuteCommandAsync(OleMenuCommand menuCommand);
+
+        protected void ShowError(string title, string message)
+        {
+            VsShellUtilities.ShowMessageBox(
+                   ServiceProvider,
+                   message,
+                   title,
+                   OLEMSGICON.OLEMSGICON_WARNING,
+                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
     }
 }

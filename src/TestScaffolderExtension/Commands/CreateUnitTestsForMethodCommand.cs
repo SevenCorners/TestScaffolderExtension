@@ -68,23 +68,13 @@ namespace TestScaffolderExtension.Commands
             var method = root.FindToken(snapshotPoint).Parent as MethodDeclarationSyntax;
             if (method == null)
             {
-                ShowError();
+                ShowError("Invalid Selection", "Please select a method to test.");
+                return;
             }
 
             var unitTestCreationOptions = new UnitTestCreationOptions(method, semanticModel);
 
             await CreateTestsAsync(unitTestCreationOptions);
-        }
-
-        private void ShowError()
-        {
-            VsShellUtilities.ShowMessageBox(
-                   ServiceProvider,
-                   "Please select a method to test.",
-                   "Invalid selection",
-                   OLEMSGICON.OLEMSGICON_WARNING,
-                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
 
         private async Task<SnapshotPoint> GetCaretPositionAsync()
