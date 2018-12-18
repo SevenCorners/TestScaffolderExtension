@@ -1,26 +1,28 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
-using Microsoft.VisualStudio.Shell;
-using TestScaffolderExtension.Models;
-using TestScaffolderExtension.Models.Solution;
-using TestScaffolderExtension.Processors.UIAutomationTest;
-using TestScaffolderExtension.ViewModels;
-using TestScaffolderExtension.Views;
-using Task = System.Threading.Tasks.Task;
-
-namespace TestScaffolderExtension.Commands
+﻿namespace TestScaffolderExtension.Commands
 {
+    using System;
+    using System.Linq;
+    using System.Windows;
+    using Microsoft.VisualStudio.Shell;
+    using TestScaffolderExtension.Models;
+    using TestScaffolderExtension.Models.Solution;
+    using TestScaffolderExtension.Processors.UIAutomationTest;
+    using TestScaffolderExtension.ViewModels;
+    using TestScaffolderExtension.Views;
+    using Task = System.Threading.Tasks.Task;
+
     internal sealed class CreateUIAutomationTestsCommand : MenuCommandBase
     {
-        private static readonly Guid _commandSet = new Guid("fed91778-c97a-4759-8037-97a8e009c9fe");
-
-        protected override int CommandId => 256;
-        protected override Guid CommandSet => _commandSet;
+        private static readonly Guid CommandSetValue = new Guid("fed91778-c97a-4759-8037-97a8e009c9fe");
 
         private CreateUIAutomationTestsCommand(AsyncPackage package)
             : base(package)
-        { }
+        {
+        }
+
+        protected override int CommandId => 256;
+
+        protected override Guid CommandSet => CommandSetValue;
 
         public static async Task InitializeAsync(AsyncPackage package)
         {
@@ -30,21 +32,23 @@ namespace TestScaffolderExtension.Commands
 
         protected override async Task ExecuteCommandAsync(OleMenuCommand menuCommand)
         {
-            var selectedItems = await VisualStudio.GetSolutionWindowSelectedItemsAsync();
+            var selectedItems = await this.VisualStudio.GetSolutionWindowSelectedItemsAsync();
             if (selectedItems.Count() != 1)
             {
-                ShowError("Invalid Selection", "Please select only one item.");
+                this.ShowError("Invalid Selection", "Please select only one item.");
                 return;
             }
+
             var selectedProjectNode = await SolutionModelFactory.BuildHierarchyPathUpAsync(selectedItems.Single()) as ProjectModelBase;
 
-            var automationTestOptions = ShowCreateUIAutomationTestsWindow();
+            var automationTestOptions = this.ShowCreateUIAutomationTestsWindow();
             var automationTestFiles = await UIAutomationTestTemplateInstantiator.InstantiateAsync(selectedProjectNode, automationTestOptions);
             foreach (var file in automationTestFiles)
             {
                 await file.OpenAsync();
             }
         }
+
         private UIAutomationTestCreationOptions ShowCreateUIAutomationTestsWindow()
         {
             var createAutomationTestsViewModel = new CreateUIAutomationTestsViewModel(new UIAutomationTestCreationOptions());

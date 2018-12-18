@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TestScaffolderExtension.Models.Solution;
-using TestScaffolderExtension.Processors;
-
-namespace TestScaffolderExtension.Templates.UnitTest
+﻿namespace TestScaffolderExtension.Templates.UnitTest
 {
-    partial class TestClassTemplate
-    {
-        private readonly ProjectModelBase _unitTestProjectLocation;
-        private readonly UnitTestCreationOptions _unitTestCreationOptions;
+    using System.Collections.Generic;
+    using System.Linq;
+    using TestScaffolderExtension.Models.Solution;
+    using TestScaffolderExtension.Processors;
 
-        private readonly List<string> _usings = new List<string>
+    public partial class TestClassTemplate
+    {
+        private readonly ProjectModelBase unitTestProjectLocation;
+        private readonly UnitTestCreationOptions unitTestCreationOptions;
+
+        private readonly List<string> usings = new List<string>
         {
             "System",
             "System.Collections.Generic",
@@ -22,14 +22,14 @@ namespace TestScaffolderExtension.Templates.UnitTest
 
         public TestClassTemplate(ProjectModelBase unitTestProjectLocation, UnitTestCreationOptions unitTestCreationOptions)
         {
-            _unitTestProjectLocation = unitTestProjectLocation;
-            _unitTestCreationOptions = unitTestCreationOptions;
+            this.unitTestProjectLocation = unitTestProjectLocation;
+            this.unitTestCreationOptions = unitTestCreationOptions;
 
-            _usings.Add(_unitTestCreationOptions.ClassUnderTestNamespace);
-            _usings.AddRange(_unitTestCreationOptions.OtherNamespaces);
-            _usings.AddRange(_unitTestCreationOptions.MethodUnderTestParameters.SelectMany(p => p.Namespaces));
+            this.usings.Add(this.unitTestCreationOptions.ClassUnderTestNamespace);
+            this.usings.AddRange(this.unitTestCreationOptions.OtherNamespaces);
+            this.usings.AddRange(this.unitTestCreationOptions.MethodUnderTestParameters.SelectMany(p => p.Namespaces));
         }
 
-        private IEnumerable<string> UsingStatements => _usings.Distinct();
+        private IEnumerable<string> UsingStatements => this.usings.Distinct();
     }
 }

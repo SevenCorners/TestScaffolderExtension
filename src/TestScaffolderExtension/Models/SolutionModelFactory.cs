@@ -1,11 +1,11 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using System;
-using System.Threading.Tasks;
-using TestScaffolderExtension.Models.Solution;
-
-namespace TestScaffolderExtension.Models
+﻿namespace TestScaffolderExtension.Models
 {
+    using System;
+    using System.Threading.Tasks;
+    using EnvDTE;
+    using Microsoft.VisualStudio.Shell;
+    using TestScaffolderExtension.Models.Solution;
+
     public static class SolutionModelFactory
     {
         private const string ProjectKind = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
@@ -114,8 +114,10 @@ namespace TestScaffolderExtension.Models
                         {
                             return new ProjectModel(parent, projectItem.SubProject);
                         }
+
                         return new SolutionFolderModel(parent, projectItem.SubProject);
                     }
+
                     return new FileModel(parent, projectItem);
                 case MiscellaneousFilesProjectKind:
                     return null;

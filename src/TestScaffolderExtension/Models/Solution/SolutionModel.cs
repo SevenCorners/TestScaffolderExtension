@@ -1,17 +1,18 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using System;
-using Task = System.Threading.Tasks.Task;
-
-namespace TestScaffolderExtension.Models.Solution
+﻿namespace TestScaffolderExtension.Models.Solution
 {
+    using System;
+    using EnvDTE;
+    using Microsoft.VisualStudio.Shell;
+    using Task = System.Threading.Tasks.Task;
+
     public sealed class SolutionModel : SolutionModelBase
     {
-        private readonly EnvDTE.Solution _solution;
+        private readonly EnvDTE.Solution solution;
 
-        public SolutionModel(EnvDTE.Solution solution) : base(null)
+        public SolutionModel(EnvDTE.Solution solution)
+            : base(null)
         {
-            _solution = solution;
+            this.solution = solution;
         }
 
         protected override ModelType ItemType => ModelType.Solution;
@@ -19,16 +20,16 @@ namespace TestScaffolderExtension.Models.Solution
         public override async Task IterateChildrenAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            Name = GetName(_solution.FullName);
+            this.Name = this.GetName(this.solution.FullName);
 
-            if (_solution.Projects?.GetEnumerator().MoveNext() ?? false)
+            if (this.solution.Projects?.GetEnumerator().MoveNext() ?? false)
             {
-                foreach (Project child in _solution.Projects)
+                foreach (Project child in this.solution.Projects)
                 {
                     var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, child);
                     if (childItem != null)
                     {
-                        Children.Add(childItem);
+                        this.Children.Add(childItem);
                     }
                 }
             }

@@ -1,21 +1,21 @@
-﻿using System.Windows;
-using TestScaffolderExtension.ViewModels;
-
-namespace TestScaffolderExtension.Views
+﻿namespace TestScaffolderExtension.Views
 {
+    using System.Windows;
+    using TestScaffolderExtension.ViewModels;
+
     /// <inheritdoc cref="BaseDialogWindow" />
     /// <summary>
     /// Interaction logic for CreateUnitTestsForMethodWindow.xaml
     /// </summary>
     public partial class CreateUnitTestsForMethodWindow
     {
-        private readonly CreateUnitTestsViewModel _viewModel;
+        private readonly CreateUnitTestsViewModel viewModel;
 
         public CreateUnitTestsForMethodWindow(CreateUnitTestsViewModel viewModel)
         {
-            InitializeComponent();
-            _viewModel = viewModel;
-            DataContext = viewModel;
+            this.InitializeComponent();
+            this.viewModel = viewModel;
+            this.DataContext = viewModel;
         }
 
         private void SolutionTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -24,29 +24,29 @@ namespace TestScaffolderExtension.Views
 
             if (newItem?.CanSelect ?? false)
             {
-                _viewModel.SelectedItem = newItem;
+                this.viewModel.SelectedItem = newItem;
             }
             else
             {
-                _viewModel.SelectedItem = null;
+                this.viewModel.SelectedItem = null;
             }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            this.DialogResult = false;
+            this.Close();
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
-            Close();
+            this.DialogResult = true;
+            this.Close();
         }
 
         private async void AddFolder_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.SelectedItem.CanCreateFolder)
+            if (this.viewModel.SelectedItem.CanCreateFolder)
             {
                 var createFolderViewModel = new CreateFolderViewModel();
                 var createFolderWindow = new CreateFolderWindow(createFolderViewModel)
@@ -57,7 +57,7 @@ namespace TestScaffolderExtension.Views
 
                 if (createFolderResult.HasValue && createFolderResult.Value)
                 {
-                    var newFolder = await _viewModel.SelectedItem.CreateFolderAsync(createFolderViewModel.NewFolderName);
+                    var newFolder = await this.viewModel.SelectedItem.CreateFolderAsync(createFolderViewModel.NewFolderName);
                     newFolder.IsSelected = true;
                 }
             }

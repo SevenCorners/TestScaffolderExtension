@@ -1,48 +1,49 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
-
-namespace TestScaffolderExtension.Models.Solution
+﻿namespace TestScaffolderExtension.Models.Solution
 {
+    using System.Threading.Tasks;
+    using EnvDTE;
+    using Microsoft.VisualStudio.Shell;
+    using Task = System.Threading.Tasks.Task;
+
     public sealed class ProjectModel : ProjectModelBase
     {
-        private readonly Project _project;
+        private readonly Project project;
 
-        public ProjectModel(SolutionModelBase parent, Project project) : base(parent)
+        public ProjectModel(SolutionModelBase parent, Project project)
+            : base(parent)
         {
-            _project = project;
+            this.project = project;
         }
 
         protected override ModelType ItemType => ModelType.Project;
 
-        protected override async Task<FileModel> CopyFileFromPathAsync(string tempFilePath)
+        public override async Task IterateChildrenAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            return new FileModel(this, _project.ProjectItems.AddFromFileCopy(tempFilePath));
+            this.Name = this.project.Name;
+            if (this.project.ProjectItems?.GetEnumerator().MoveNext() ?? false)
+            {
+                foreach (ProjectItem child in this.project.ProjectItems)
+                {
+                    var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, child);
+                    if (childItem != null)
+                    {
+                        this.Children.Add(childItem);
+                    }
+                }
+            }
         }
 
         protected override async Task<ProjectItem> AddFolderInternalAsync(string folderName)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            return _project.ProjectItems.AddFolder(folderName);
+            return this.project.ProjectItems.AddFolder(folderName);
         }
 
-        public override async Task IterateChildrenAsync()
+        protected override async Task<FileModel> CopyFileFromPathAsync(string tempFilePath)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            Name = _project.Name;
-            if (_project.ProjectItems?.GetEnumerator().MoveNext() ?? false)
-            {
-                foreach(ProjectItem child in _project.ProjectItems)
-                {
-                    var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, child);
-                    if (childItem != null)
-                    {
-                        Children.Add(childItem);
-                    }
-                }
-            }
+            return new FileModel(this, this.project.ProjectItems.AddFromFileCopy(tempFilePath));
         }
     }
 }

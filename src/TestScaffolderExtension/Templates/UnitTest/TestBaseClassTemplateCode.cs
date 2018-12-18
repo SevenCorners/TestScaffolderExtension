@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TestScaffolderExtension.Models.Solution;
-using TestScaffolderExtension.Processors;
-
-namespace TestScaffolderExtension.Templates.UnitTest
+﻿namespace TestScaffolderExtension.Templates.UnitTest
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using TestScaffolderExtension.Models.Solution;
+    using TestScaffolderExtension.Processors;
+
     public partial class TestBaseClassTemplate
     {
-        private readonly ProjectModelBase _unitTestProjectLocation;
-        private readonly UnitTestCreationOptions _unitTestCreationOptions;
+        private readonly ProjectModelBase unitTestProjectLocation;
+        private readonly UnitTestCreationOptions unitTestCreationOptions;
 
-        private readonly List<string> _usings = new List<string>
+        private readonly List<string> usings = new List<string>
         {
             "System",
             "System.Collections.Generic",
@@ -22,13 +22,13 @@ namespace TestScaffolderExtension.Templates.UnitTest
 
         public TestBaseClassTemplate(ProjectModelBase unitTestProjectLocation, UnitTestCreationOptions unitTestCreationOptions)
         {
-            _unitTestProjectLocation = unitTestProjectLocation;
-            _unitTestCreationOptions = unitTestCreationOptions;
+            this.unitTestProjectLocation = unitTestProjectLocation;
+            this.unitTestCreationOptions = unitTestCreationOptions;
 
-            _usings.Add(_unitTestCreationOptions.ClassUnderTestNamespace);
-            _usings.AddRange(_unitTestCreationOptions.ClassUnderTestConstructor.Parameters.SelectMany(p => p.Namespaces));
+            this.usings.Add(this.unitTestCreationOptions.ClassUnderTestNamespace);
+            this.usings.AddRange(this.unitTestCreationOptions.ClassUnderTestConstructor.Parameters.SelectMany(p => p.Namespaces));
         }
 
-        private IEnumerable<string> UsingStatements => _usings.Distinct();
+        private IEnumerable<string> UsingStatements => this.usings.Distinct();
     }
 }

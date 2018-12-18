@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
-
-namespace TestScaffolderExtension.Extensions
+﻿namespace TestScaffolderExtension.Extensions
 {
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.Shell;
+
     public static class IAsyncServiceProviderExtensions
     {
         public static async Task<T> GetAsync<T>(this IAsyncServiceProvider serviceProvider)

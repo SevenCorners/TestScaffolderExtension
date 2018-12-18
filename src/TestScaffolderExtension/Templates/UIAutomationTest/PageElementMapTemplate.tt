@@ -4,16 +4,16 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-<# foreach(var usingStatement in Usings)
+<# foreach(var usingStatement in usings)
 {#>
 <#=$"using {usingStatement};"#>
 <#}#>
 
-namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
+namespace <#=testLocation.GetFullPathForNamespace().Trim('.')#>
 {
-    public class <#=_automationTestOptions.PageElementMapClassName#> : BasePage
+    public class <#=automationTestOptions.PageElementMapClassName#> : BasePage
     {
-        public <#=_automationTestOptions.PageElementMapClassName#>(IWebDriver driver): base(driver)
+        public <#=automationTestOptions.PageElementMapClassName#>(IWebDriver driver): base(driver)
         {
         }
 

@@ -1,47 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace TestScaffolderExtension.Models.Analysis
+﻿namespace TestScaffolderExtension.Models.Analysis
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class ConstructorInformation
     {
+        private readonly string className;
+
+        private readonly ConstructorType constructorType;
+
         public ConstructorInformation(string className, ConstructorType constructorType)
         {
-            _className = className;
-            _constructorType = constructorType;
-            Parameters = new List<ParameterInformation>();
+            this.className = className;
+            this.constructorType = constructorType;
+            this.Parameters = new List<ParameterInformation>();
         }
 
         public ConstructorInformation(string className, ConstructorType constructorType, List<ParameterInformation> parameters)
         {
-            _className = className;
-            _constructorType = constructorType;
-            Parameters = parameters;
+            this.className = className;
+            this.constructorType = constructorType;
+            this.Parameters = parameters;
+        }
+
+        public List<ParameterInformation> Parameters { get; }
+
+        public string GetConstructorString(Func<ParameterInformation, string> parameterNameFunc)
+        {
+            if (this.constructorType == ConstructorType.Default && !this.Parameters.Any())
+            {
+                return $"default({this.className})";
+            }
+
+            return $"new {this.className}({string.Join(", ", this.Parameters.Select(parameterNameFunc))})";
         }
 
         public string GetConstructorStringWithMockParameters(Func<ParameterInformation, string> parameterNameFunc)
         {
-            if (_constructorType == ConstructorType.Default && !Parameters.Any())
+            if (this.constructorType == ConstructorType.Default && !this.Parameters.Any())
             {
-                return $"default({_className})";
+                return $"default({this.className})";
             }
 
-            return $"new {_className}({string.Join(", ", Parameters.Select(p => $"{parameterNameFunc(p)}.Object"))})";
+            return $"new {this.className}({string.Join(", ", this.Parameters.Select(p => $"{parameterNameFunc(p)}.Object"))})";
         }
-
-        public string GetConstructorString(Func<ParameterInformation, string> parameterNameFunc)
-        {
-            if (_constructorType == ConstructorType.Default && !Parameters.Any())
-            {
-                return $"default({_className})";
-            }
-
-            return $"new {_className}({string.Join(", ", Parameters.Select(parameterNameFunc))})";
-        }
-
-        private readonly ConstructorType _constructorType;
-        private readonly string _className;
-        public List<ParameterInformation> Parameters { get; }
     }
 }

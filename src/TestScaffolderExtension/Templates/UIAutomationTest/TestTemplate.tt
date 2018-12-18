@@ -4,18 +4,18 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-<# foreach(var usingStatement in Usings)
+<# foreach(var usingStatement in usings)
 {#>
 <#=$"using {usingStatement};"#>
 <#}#>
-using <#=_testLocation.GetFullPathForNamespace().Trim('.')#>;
+using <#=testLocation.GetFullPathForNamespace().Trim('.')#>;
 
-namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
+namespace <#=testLocation.GetFullPathForNamespace().Trim('.')#>
 {
     [TestFixture]
-    public class <#=_automationTestOptions.TestClassName#> : <#=_automationTestOptions.TestTypeBaseClassName#>
+    public class <#=automationTestOptions.TestClassName#> : <#=automationTestOptions.TestTypeBaseClassName#>
     {
-        private <#=_automationTestOptions.PageClassName#> <#=_automationTestOptions.PageTypeNameAsPrivateField#>;
+        private <#=automationTestOptions.PageClassName#> <#=automationTestOptions.PageTypeNameAsPrivateField#>;
         private TestDataModel _testData;
 
         [OneTimeSetUp]
@@ -26,8 +26,8 @@ namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
 
         [Test]
         //[Category(TestCategories.Area.Admin)]
-        [Category(TestCategories.TestTypes.<#=_automationTestOptions.TestTypeCategory#>)]
-        public void Example<#=_automationTestOptions.TestTypeCategory#>Test()
+        [Category(TestCategories.TestTypes.<#=automationTestOptions.TestTypeCategory#>)]
+        public void Example<#=automationTestOptions.TestTypeCategory#>Test()
         {
             TryBlock(() =>
             {

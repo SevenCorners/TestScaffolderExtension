@@ -1,16 +1,17 @@
-﻿using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using Task = System.Threading.Tasks.Task;
-
-namespace TestScaffolderExtension.Models.Solution
+﻿namespace TestScaffolderExtension.Models.Solution
 {
+    using EnvDTE;
+    using Microsoft.VisualStudio.Shell;
+    using Task = System.Threading.Tasks.Task;
+
     public class FileModel : SolutionModelBase
     {
-        private readonly ProjectItem _file;
+        private readonly ProjectItem file;
 
-        public FileModel(SolutionModelBase parent, ProjectItem file) : base(parent)
+        public FileModel(SolutionModelBase parent, ProjectItem file)
+            : base(parent)
         {
-            _file = file;
+            this.file = file;
         }
 
         protected override ModelType ItemType => ModelType.File;
@@ -18,18 +19,18 @@ namespace TestScaffolderExtension.Models.Solution
         public override async Task IterateChildrenAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            Name = _file.Name;
+            this.Name = this.file.Name;
         }
 
         internal async Task OpenAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            if (_file.IsOpen)
+            if (this.file.IsOpen)
             {
                 return;
             }
 
-            var window = _file.Open();
+            var window = this.file.Open();
             window.Activate();
         }
     }

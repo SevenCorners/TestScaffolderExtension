@@ -1,8 +1,8 @@
-﻿using System.Windows;
-using TestScaffolderExtension.ViewModels;
-
-namespace TestScaffolderExtension.Views
+﻿namespace TestScaffolderExtension.Views
 {
+    using System.Windows;
+    using TestScaffolderExtension.ViewModels;
+
     /// <inheritdoc cref="BaseDialogWindow" />
     /// <summary>
     /// Interaction logic for CreateFolderWindow.xaml
@@ -11,20 +11,20 @@ namespace TestScaffolderExtension.Views
     {
         public CreateFolderWindow(CreateFolderViewModel createFolderViewModel)
         {
-            InitializeComponent();
-            DataContext = createFolderViewModel;
+            this.InitializeComponent();
+            this.DataContext = createFolderViewModel;
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
-            Close();
+            this.DialogResult = true;
+            this.Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            this.DialogResult = false;
+            this.Close();
         }
     }
 }

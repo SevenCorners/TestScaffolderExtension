@@ -52,35 +52,35 @@ namespace TestScaffolderExtension.Templates.UnitTest
             this.Write("\r\nnamespace ");
             
             #line 13 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestProjectLocation.GetFullPathForNamespace().Trim('.')));
             
             #line default
             #line hidden
             this.Write("\r\n{\r\n    [TestClass]\r\n\tpublic abstract class ");
             
             #line 16 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.UnitTestBaseClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.UnitTestBaseClassName));
             
             #line default
             #line hidden
             this.Write("\r\n\t{\r\n        protected ");
             
             #line 18 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.ClassUnderTestName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.ClassUnderTestName));
             
             #line default
             #line hidden
             this.Write(" ");
             
             #line 18 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.ClassUnderTestName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.ClassUnderTestName));
             
             #line default
             #line hidden
             this.Write(";\r\n\r\n");
             
             #line 20 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
- foreach(var parameter in _unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
+ foreach(var parameter in unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
 {
             
             #line default
@@ -102,7 +102,7 @@ namespace TestScaffolderExtension.Templates.UnitTest
             this.Write("\r\n        [TestInitialize]\r\n        public virtual void Arrange()\r\n\t\t{\r\n");
             
             #line 28 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
- foreach(var parameter in _unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
+ foreach(var parameter in unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
 {
             
             #line default
@@ -124,14 +124,14 @@ namespace TestScaffolderExtension.Templates.UnitTest
             this.Write("\r\n            ");
             
             #line 33 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.ClassUnderTestName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.ClassUnderTestName));
             
             #line default
             #line hidden
             this.Write(" = ");
             
             #line 33 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestBaseClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.ClassUnderTestConstructor.GetConstructorStringWithMockParameters(p => p.NameAsProtectedField)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.ClassUnderTestConstructor.GetConstructorStringWithMockParameters(p => p.NameAsProtectedField)));
             
             #line default
             #line hidden

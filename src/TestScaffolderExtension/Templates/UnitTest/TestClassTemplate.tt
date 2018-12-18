@@ -10,12 +10,12 @@
 <#=$"using {usingStatement};"#>
 <#}#>
 
-namespace <#=_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
+namespace <#=unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
 {
     [TestClass]
-	public class <#=_unitTestCreationOptions.UnitTestClassName#> : <#=_unitTestCreationOptions.UnitTestBaseClassName#>
+	public class <#=unitTestCreationOptions.UnitTestClassName#> : <#=unitTestCreationOptions.UnitTestBaseClassName#>
 	{
-<# foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
+<# foreach(var parameter in unitTestCreationOptions.MethodUnderTestParameters)
 {#>
 		<#=$"private {parameter.SimpleTypeName} {parameter.NameAsPrivateField};"#>
 <#}#>
@@ -25,15 +25,15 @@ namespace <#=_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
         {
             base.Arrange();
 
-<# foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
+<# foreach(var parameter in unitTestCreationOptions.MethodUnderTestParameters)
 {#>
 			<#=$"{parameter.NameAsPrivateField} = {parameter.Constructor.GetConstructorString(p => $@"/*{p.NameAsLocalVariable}*/")};"#>
 <#}#>
         }
 
-        private <#=_unitTestCreationOptions.MethodUnderTestReturnTypeName#> Act()
+        private <#=unitTestCreationOptions.MethodUnderTestReturnTypeName#> Act()
 		{
-            <# if(_unitTestCreationOptions.MethodUnderTestReturnTypeName != "void") { #>return <# } #><#=_unitTestCreationOptions.ClassUnderTestName#>.<#=_unitTestCreationOptions.MethodUnderTestName#>(<#=string.Join(", ", _unitTestCreationOptions.MethodUnderTestParameters.Select(p => $"{p.NameAsPrivateField}")) #>);
+            <# if(unitTestCreationOptions.MethodUnderTestReturnTypeName != "void") { #>return <# } #><#=unitTestCreationOptions.ClassUnderTestName#>.<#=unitTestCreationOptions.MethodUnderTestName#>(<#=string.Join(", ", unitTestCreationOptions.MethodUnderTestParameters.Select(p => $"{p.NameAsPrivateField}")) #>);
         }
 	}
 }

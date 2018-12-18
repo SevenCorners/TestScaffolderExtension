@@ -10,14 +10,14 @@
 <#=$"using {usingStatement};"#>
 <#}#>
 
-namespace <#=_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
+namespace <#=unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
 {
     [TestClass]
-	public abstract class <#=_unitTestCreationOptions.UnitTestBaseClassName#>
+	public abstract class <#=unitTestCreationOptions.UnitTestBaseClassName#>
 	{
-        protected <#=_unitTestCreationOptions.ClassUnderTestName#> <#=_unitTestCreationOptions.ClassUnderTestName#>;
+        protected <#=unitTestCreationOptions.ClassUnderTestName#> <#=unitTestCreationOptions.ClassUnderTestName#>;
 
-<# foreach(var parameter in _unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
+<# foreach(var parameter in unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
 {#>
 		<#=$"protected Mock<{parameter.SimpleTypeName}> {parameter.NameAsProtectedField};"#>
 <#}#>
@@ -25,12 +25,12 @@ namespace <#=_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
         [TestInitialize]
         public virtual void Arrange()
 		{
-<# foreach(var parameter in _unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
+<# foreach(var parameter in unitTestCreationOptions.ClassUnderTestConstructor.Parameters)
 {#>
 			<#=$"{parameter.NameAsProtectedField} = new Mock<{parameter.SimpleTypeName}>();"#>
 <#}#>
 
-            <#=_unitTestCreationOptions.ClassUnderTestName#> = <#=_unitTestCreationOptions.ClassUnderTestConstructor.GetConstructorStringWithMockParameters(p => p.NameAsProtectedField)#>;
+            <#=unitTestCreationOptions.ClassUnderTestName#> = <#=unitTestCreationOptions.ClassUnderTestConstructor.GetConstructorStringWithMockParameters(p => p.NameAsProtectedField)#>;
         }
 	}
 }

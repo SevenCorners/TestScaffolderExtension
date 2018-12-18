@@ -1,60 +1,66 @@
-﻿using TestScaffolderExtension.Models;
-using TestScaffolderExtension.Processors.UIAutomationTest;
-
-namespace TestScaffolderExtension.ViewModels
+﻿namespace TestScaffolderExtension.ViewModels
 {
+    using TestScaffolderExtension.Models;
+    using TestScaffolderExtension.Processors.UIAutomationTest;
+
     public class CreateUIAutomationTestsViewModel : ViewModelBase
     {
-        public UIAutomationTestCreationOptions TestCreationOptions { get; }
-
-        public CreateUIAutomationTestsViewModel() { }
+        public CreateUIAutomationTestsViewModel()
+        {
+        }
 
         public CreateUIAutomationTestsViewModel(UIAutomationTestCreationOptions testCreationOptions)
         {
-            TestCreationOptions = testCreationOptions;
+            this.TestCreationOptions = testCreationOptions;
         }
 
-        public AutomationTestType TestType
-        {
-            get
-            {
-                return TestCreationOptions.TestType;
-            }
+        public bool CanCreate => !string.IsNullOrEmpty(this.PageName);
 
-            set
-            {
-                TestCreationOptions.TestType = value;
-                OnPropertyChanged(nameof(TestType));
-            }
-        }
+        public string PageClassName => this.TestCreationOptions.PageClassName;
+
+        public string PageElementMapClassName => this.TestCreationOptions.PageElementMapClassName;
 
         public string PageName
         {
             get
             {
-                return TestCreationOptions.PageName;
+                return this.TestCreationOptions.PageName;
             }
+
             set
             {
-                TestCreationOptions.PageName = value;
+                this.TestCreationOptions.PageName = value;
 
-                OnPropertyChanged(nameof(PageName));
-                OnPropertyChanged(nameof(TestFolderName));
-                OnPropertyChanged(nameof(TestClassName));
-                OnPropertyChanged(nameof(PageClassName));
-                OnPropertyChanged(nameof(PageElementMapClassName));
-                OnPropertyChanged(nameof(PageValidatorClassName));
-                OnPropertyChanged(nameof(CanCreate));
+                this.OnPropertyChanged(nameof(this.PageName));
+                this.OnPropertyChanged(nameof(this.TestFolderName));
+                this.OnPropertyChanged(nameof(this.TestClassName));
+                this.OnPropertyChanged(nameof(this.PageClassName));
+                this.OnPropertyChanged(nameof(this.PageElementMapClassName));
+                this.OnPropertyChanged(nameof(this.PageValidatorClassName));
+                this.OnPropertyChanged(nameof(this.CanCreate));
             }
         }
 
+        public string PageValidatorClassName => this.TestCreationOptions.PageValidatorClassName;
 
-        public string TestFolderName => TestCreationOptions.TestFolderName;
-        public string TestClassName => TestCreationOptions.TestClassName;
-        public string PageClassName => TestCreationOptions.PageClassName;
-        public string PageElementMapClassName => TestCreationOptions.PageElementMapClassName;
-        public string PageValidatorClassName => TestCreationOptions.PageValidatorClassName;
+        public string TestClassName => this.TestCreationOptions.TestClassName;
 
-        public bool CanCreate => !string.IsNullOrEmpty(PageName);
+        public UIAutomationTestCreationOptions TestCreationOptions { get; }
+
+        public string TestFolderName => this.TestCreationOptions.TestFolderName;
+
+        public AutomationTestType TestType
+        {
+            get
+            {
+                return this.TestCreationOptions.TestType;
+            }
+
+            set
+            {
+                this.TestCreationOptions.TestType = value;
+                this.OnPropertyChanged(nameof(this.TestType));
+            }
+        }
     }
 }

@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-using System.Threading;
-using TestScaffolderExtension.Commands;
-using Task = System.Threading.Tasks.Task;
-
-namespace TestScaffolderExtension.PackageDetails
+﻿namespace TestScaffolderExtension.PackageDetails
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.InteropServices;
+    using System.Threading;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using TestScaffolderExtension.Commands;
+    using Task = System.Threading.Tasks.Task;
+
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
     /// </summary>
@@ -32,7 +32,8 @@ namespace TestScaffolderExtension.PackageDetails
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideAutoLoad(EditorWindowContextGuid, PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideUIContextRule(EditorWindowContextGuid,
+    [ProvideUIContextRule(
+        EditorWindowContextGuid,
         name: "Test Scaffolder Package Load",
         expression: "CSharpEditorWindow | SingleSolutionItemSelected",
         termNames: new[] { "CSharpEditorWindow", "SingleSolutionItemSelected" },
@@ -45,8 +46,6 @@ namespace TestScaffolderExtension.PackageDetails
         private const string PackageGuidString = "6b0cf9bc-35f3-4637-9b8c-34f63c6b00ef";
         private const string EditorWindowContextGuid = "DCAB817C-68D8-49E0-92DA-435D12F840D0";
 
-        #region Package Members
-
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -58,7 +57,5 @@ namespace TestScaffolderExtension.PackageDetails
             await CreateUnitTestsForMethodCommand.InitializeAsync(this);
             await CreateUIAutomationTestsCommand.InitializeAsync(this);
         }
-
-        #endregion
     }
 }

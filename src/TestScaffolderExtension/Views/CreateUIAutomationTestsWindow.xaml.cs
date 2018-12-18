@@ -1,7 +1,7 @@
-﻿using TestScaffolderExtension.ViewModels;
-
-namespace TestScaffolderExtension.Views
+﻿namespace TestScaffolderExtension.Views
 {
+    using TestScaffolderExtension.ViewModels;
+
     /// <summary>
     /// Interaction logic for CreateUIAutomationTestsWindow.xaml
     /// </summary>
@@ -9,20 +9,20 @@ namespace TestScaffolderExtension.Views
     {
         public CreateUIAutomationTestsWindow(CreateUIAutomationTestsViewModel createAutomationTestsViewModel)
         {
-            InitializeComponent();
-            DataContext = createAutomationTestsViewModel;
+            this.InitializeComponent();
+            this.DataContext = createAutomationTestsViewModel;
         }
 
         private void Cancel_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            this.DialogResult = false;
+            this.Close();
         }
 
         private void Create_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            DialogResult = true;
-            Close();
+            this.DialogResult = true;
+            this.Close();
         }
     }
 }

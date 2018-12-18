@@ -1,54 +1,62 @@
-﻿using System;
-using System.ComponentModel.Design;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using TestScaffolderExtension.Extensions;
-using TestScaffolderExtension.Models;
-using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider;
-using Task = System.Threading.Tasks.Task;
-
-namespace TestScaffolderExtension.Commands
+﻿namespace TestScaffolderExtension.Commands
 {
+    using System;
+    using System.ComponentModel.Design;
+    using EnvDTE;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using TestScaffolderExtension.Extensions;
+    using TestScaffolderExtension.Models;
+    using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider;
+    using Task = System.Threading.Tasks.Task;
+
     internal abstract class MenuCommandBase
     {
-        protected abstract int CommandId { get; }
-        protected abstract Guid CommandSet { get; }
+        protected MenuCommandBase(AsyncPackage asyncPackage)
+        {
+            this.AsyncServiceProvider = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
+            this.ServiceProvider = asyncPackage as IServiceProvider ?? throw new ArgumentException($"Unable to cast {nameof(asyncPackage)} as {nameof(IServiceProvider)}.");
+        }
 
-        /// <summary>
-        /// Gets the asynchronous service provider from the owner package.
-        /// </summary>
         protected IAsyncServiceProvider AsyncServiceProvider { get; }
 
-        /// <summary>
-        /// Gets the synchronous service provider from the owner package.
-        /// </summary>
+        protected abstract int CommandId { get; }
+
+        protected abstract Guid CommandSet { get; }
+
         protected IServiceProvider ServiceProvider { get; }
 
         protected VisualStudioObjectModel VisualStudio { get; private set; }
 
-        protected MenuCommandBase(AsyncPackage asyncPackage)
+        protected async Task AddCommandToMenuAsync()
         {
-            AsyncServiceProvider = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
-            ServiceProvider = asyncPackage as IServiceProvider ?? throw new ArgumentException($"Unable to cast {nameof(asyncPackage)} as {nameof(IServiceProvider)}.");
+            var commandService = await this.AsyncServiceProvider.GetAsAsync<IMenuCommandService, OleMenuCommandService>();
+            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
+
+            var menuCommandID = new CommandID(this.CommandSet, this.CommandId);
+            var menuCommand = new OleMenuCommand(this.Execute, menuCommandID);
+            commandService.AddCommand(menuCommand);
         }
+
+        protected abstract Task ExecuteCommandAsync(OleMenuCommand menuCommand);
 
         protected async Task InitializeInternalAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            await AddCommandToMenuAsync();
-            VisualStudio = new VisualStudioObjectModel(await AsyncServiceProvider.GetAsync<DTE>());
+            await this.AddCommandToMenuAsync();
+            this.VisualStudio = new VisualStudioObjectModel(await this.AsyncServiceProvider.GetAsync<DTE>());
         }
 
-        protected async Task AddCommandToMenuAsync()
+        protected void ShowError(string title, string message)
         {
-            var commandService = await AsyncServiceProvider.GetAsAsync<IMenuCommandService, OleMenuCommandService>();
-            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-
-            var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuCommand = new OleMenuCommand(this.Execute, menuCommandID);
-            commandService.AddCommand(menuCommand);
+            VsShellUtilities.ShowMessageBox(
+                   this.ServiceProvider,
+                   message,
+                   title,
+                   OLEMSGICON.OLEMSGICON_WARNING,
+                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
 
         /// <summary>
@@ -60,29 +68,22 @@ namespace TestScaffolderExtension.Commands
         /// <param name="e">Event args.</param>
         private async void Execute(object sender, EventArgs e)
         {
-            if (!(sender is OleMenuCommand menuCommand)) return;
+#pragma warning disable SA1119 // StatementMustNotUseUnnecessaryParenthesis
+            // these parenthesis are necessary, issue is fixed in upcoming StyleCop release
+            if (!(sender is OleMenuCommand menuCommand))
+            {
+                return;
+            }
+#pragma warning restore SA1119 // StatementMustNotUseUnnecessaryParenthesis
 
             try
             {
-                await ExecuteCommandAsync(menuCommand);
+                await this.ExecuteCommandAsync(menuCommand);
             }
             catch (Exception ex)
             {
-                ShowError("Not a project or project folder", ex.Message);
+                this.ShowError("Not a project or project folder", ex.Message);
             }
-        }
-
-        protected abstract Task ExecuteCommandAsync(OleMenuCommand menuCommand);
-
-        protected void ShowError(string title, string message)
-        {
-            VsShellUtilities.ShowMessageBox(
-                   ServiceProvider,
-                   message,
-                   title,
-                   OLEMSGICON.OLEMSGICON_WARNING,
-                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
     }
 }

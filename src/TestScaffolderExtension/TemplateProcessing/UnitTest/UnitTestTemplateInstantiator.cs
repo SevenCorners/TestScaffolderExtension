@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TestScaffolderExtension.Models.Solution;
-using TestBaseClassTemplate = TestScaffolderExtension.Templates.UnitTest.TestBaseClassTemplate;
-using TestClassTemplate = TestScaffolderExtension.Templates.UnitTest.TestClassTemplate;
-
-namespace TestScaffolderExtension.Processors
+﻿namespace TestScaffolderExtension.Processors
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using TestScaffolderExtension.Models.Solution;
+    using TestBaseClassTemplate = TestScaffolderExtension.Templates.UnitTest.TestBaseClassTemplate;
+    using TestClassTemplate = TestScaffolderExtension.Templates.UnitTest.TestClassTemplate;
+
     internal static class UnitTestTemplateInstantiator
     {
         internal static async Task<IEnumerable<FileModel>> InstantiateUnitTestTemplateAsync(ProjectModelBase locationForTest, UnitTestCreationOptions unitTestCreationOptions)
@@ -29,6 +29,7 @@ namespace TestScaffolderExtension.Processors
             {
                 return await locationForTest.AddFolderAsync(creationOptions.UnitTestFolderName);
             }
+
             return locationForTest;
         }
 
