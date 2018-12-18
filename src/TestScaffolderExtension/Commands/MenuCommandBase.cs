@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using System;
+﻿using System;
 using System.ComponentModel.Design;
-using Task = System.Threading.Tasks.Task;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Commands
 {
@@ -39,14 +39,8 @@ namespace TestScaffolderExtension.Commands
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuCommand = new OleMenuCommand(this.Execute, menuCommandID);
-            //AddBeforeQueryStatus(menuCommand);
             commandService.AddCommand(menuCommand);
         }
-
-        //protected virtual void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        //{
-        //    return;
-        //}
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -57,7 +51,6 @@ namespace TestScaffolderExtension.Commands
         /// <param name="e">Event args.</param>
         private async void Execute(object sender, EventArgs e)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!(sender is OleMenuCommand menuCommand)) return;
 
             try
@@ -77,5 +70,16 @@ namespace TestScaffolderExtension.Commands
         }
 
         protected abstract Task ExecuteCommandAsync(OleMenuCommand menuCommand);
+
+        protected void ShowError(string title, string message)
+        {
+            VsShellUtilities.ShowMessageBox(
+                   ServiceProvider,
+                   message,
+                   title,
+                   OLEMSGICON.OLEMSGICON_WARNING,
+                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
     }
 }

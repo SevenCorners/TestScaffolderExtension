@@ -31,7 +31,6 @@ namespace TestScaffolderExtension.PackageDetails
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    //[ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideAutoLoad(EditorWindowContextGuid, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideUIContextRule(EditorWindowContextGuid,
         name: "Test Scaffolder Package Load",
@@ -56,9 +55,6 @@ namespace TestScaffolderExtension.PackageDetails
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            // When initialized asynchronously, the current thread may be a background thread at this point.
-            // Do any initialization that requires the UI thread after switching to the UI thread.
-            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await CreateUnitTestsForMethodCommand.InitializeAsync(this);
             await CreateUIAutomationTestsCommand.InitializeAsync(this);
         }
