@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TestScaffolderExtension.Models.Solution;
-using TestScaffolderExtension.Templates.UIAutomationTest;
-
-namespace TestScaffolderExtension.Processors.UIAutomationTest
+﻿namespace TestScaffolderExtension.Processors.UIAutomationTest
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using TestScaffolderExtension.Models.Solution;
+    using TestScaffolderExtension.Templates.UIAutomationTest;
+
     internal static class UIAutomationTestTemplateInstantiator
     {
         internal static async Task<IEnumerable<FileModel>> InstantiateAsync(ProjectModelBase selectedProjectNode, UIAutomationTestCreationOptions automationTestOptions)

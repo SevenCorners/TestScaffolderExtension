@@ -52,28 +52,28 @@ namespace TestScaffolderExtension.Templates.UnitTest
             this.Write("\r\nnamespace ");
             
             #line 13 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestProjectLocation.GetFullPathForNamespace().Trim('.')));
             
             #line default
             #line hidden
             this.Write("\r\n{\r\n    [TestClass]\r\n\tpublic class ");
             
             #line 16 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.UnitTestClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.UnitTestClassName));
             
             #line default
             #line hidden
             this.Write(" : ");
             
             #line 16 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.UnitTestBaseClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.UnitTestBaseClassName));
             
             #line default
             #line hidden
             this.Write("\r\n\t{\r\n");
             
             #line 18 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
- foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
+ foreach(var parameter in unitTestCreationOptions.MethodUnderTestParameters)
 {
             
             #line default
@@ -96,7 +96,7 @@ namespace TestScaffolderExtension.Templates.UnitTest
                     "          base.Arrange();\r\n\r\n");
             
             #line 28 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
- foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
+ foreach(var parameter in unitTestCreationOptions.MethodUnderTestParameters)
 {
             
             #line default
@@ -118,14 +118,14 @@ namespace TestScaffolderExtension.Templates.UnitTest
             this.Write("        }\r\n\r\n        private ");
             
             #line 34 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.MethodUnderTestReturnTypeName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.MethodUnderTestReturnTypeName));
             
             #line default
             #line hidden
             this.Write(" Act()\r\n\t\t{\r\n            ");
             
             #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
- if(_unitTestCreationOptions.MethodUnderTestReturnTypeName != "void") { 
+ if(unitTestCreationOptions.MethodUnderTestReturnTypeName != "void") { 
             
             #line default
             #line hidden
@@ -138,21 +138,21 @@ namespace TestScaffolderExtension.Templates.UnitTest
             #line hidden
             
             #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.ClassUnderTestName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.ClassUnderTestName));
             
             #line default
             #line hidden
             this.Write(".");
             
             #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_unitTestCreationOptions.MethodUnderTestName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(unitTestCreationOptions.MethodUnderTestName));
             
             #line default
             #line hidden
             this.Write("(");
             
             #line 36 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UnitTest\TestClassTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", _unitTestCreationOptions.MethodUnderTestParameters.Select(p => $"{p.NameAsPrivateField}"))));
+            this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", unitTestCreationOptions.MethodUnderTestParameters.Select(p => $"{p.NameAsPrivateField}"))));
             
             #line default
             #line hidden

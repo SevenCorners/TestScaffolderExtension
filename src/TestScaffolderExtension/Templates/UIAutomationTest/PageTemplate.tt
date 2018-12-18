@@ -4,24 +4,24 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-<# foreach(var usingStatement in Usings)
+<# foreach(var usingStatement in usings)
 {#>
 <#=$"using {usingStatement};"#>
 <#}#>
 
-namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
+namespace <#=testLocation.GetFullPathForNamespace().Trim('.')#>
 {
-    public class <#=_automationTestOptions.PageClassName#> : BasePage
+    public class <#=automationTestOptions.PageClassName#> : BasePage
     {
-        public <#=_automationTestOptions.PageClassName#>(IWebDriver driver): base(driver)
+        public <#=automationTestOptions.PageClassName#>(IWebDriver driver): base(driver)
         {
         }
 
-        protected <#=_automationTestOptions.PageElementMapClassName#>  Map => new <#=_automationTestOptions.PageElementMapClassName#> (_browser);
+        protected <#=automationTestOptions.PageElementMapClassName#>  Map => new <#=automationTestOptions.PageElementMapClassName#> (_browser);
 
-        public <#=_automationTestOptions.PageValidatorClassName#> Validate()
+        public <#=automationTestOptions.PageValidatorClassName#> Validate()
         {
-            return new <#=_automationTestOptions.PageValidatorClassName#> (_browser);
+            return new <#=automationTestOptions.PageValidatorClassName#> (_browser);
         }        
 
         public void ExampleAction()

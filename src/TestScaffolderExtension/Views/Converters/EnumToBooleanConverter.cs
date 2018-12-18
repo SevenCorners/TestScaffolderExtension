@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace TestScaffolderExtension.Views.Converters
+﻿namespace TestScaffolderExtension.Views.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
     internal class EnumToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -12,6 +12,7 @@ namespace TestScaffolderExtension.Views.Converters
             {
                 return true;
             }
+
             return false;
         }
 

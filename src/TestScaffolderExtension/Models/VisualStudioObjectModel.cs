@@ -1,27 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
-using TestScaffolderExtension.Models.Solution;
-
-namespace TestScaffolderExtension.Models
+﻿namespace TestScaffolderExtension.Models
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using EnvDTE;
+    using EnvDTE80;
+    using Microsoft.VisualStudio.Shell;
+    using TestScaffolderExtension.Models.Solution;
+
     public class VisualStudioObjectModel
     {
-        private readonly DTE _dte;
-        private DTE2 Dte2 => (DTE2)_dte;
+        private readonly DTE dte;
 
         public VisualStudioObjectModel(DTE dte)
         {
-            _dte = dte;
+            this.dte = dte;
         }
+
+        private DTE2 Dte2 => (DTE2)this.dte;
 
         public async Task<SolutionModel> GetSolutionAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            var solutionModel = new SolutionModel(_dte.Solution);
+            var solutionModel = new SolutionModel(this.dte.Solution);
             await solutionModel.IterateChildrenAsync();
             return solutionModel;
         }
@@ -30,7 +31,7 @@ namespace TestScaffolderExtension.Models
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            var ui = Dte2.Windows.Item(Constants.vsWindowKindSolutionExplorer).Object as UIHierarchy;
+            var ui = this.Dte2.Windows.Item(Constants.vsWindowKindSolutionExplorer).Object as UIHierarchy;
             var selectedItems = ui.SelectedItems as object[];
 
             var hierarchyItemObjects = new List<object>();
@@ -38,6 +39,7 @@ namespace TestScaffolderExtension.Models
             {
                 hierarchyItemObjects.Add(item.Object);
             }
+
             return hierarchyItemObjects;
         }
     }

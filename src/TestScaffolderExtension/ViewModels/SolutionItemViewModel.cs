@@ -8,54 +8,56 @@
 
     public class SolutionItemViewModel : ViewModelBase
     {
-        private bool _isSelected;
+        private bool isSelected;
 
-        public SolutionItemViewModel() { }
+        public SolutionItemViewModel()
+        {
+        }
 
         public SolutionItemViewModel(SolutionModelBase item)
         {
-            Item = item;
-            Children = new ObservableCollection<SolutionItemViewModel>();
+            this.Item = item;
+            this.Children = new ObservableCollection<SolutionItemViewModel>();
             foreach (var child in item.Children.OrderBy(c => c.SortOrder).ThenBy(c => c.Name))
             {
-                Children.Add(new SolutionItemViewModel(child));
+                this.Children.Add(new SolutionItemViewModel(child));
             }
         }
 
         public SolutionModelBase Item { get; }
 
-        public string ItemType => Item.GetType().ToString();
+        public string ItemType => this.Item.GetType().ToString();
 
-        public string Name => Item.Name;
+        public string Name => this.Item.Name;
 
-        public string DisplayName => Name;
+        public string DisplayName => this.Name;
 
-        public bool CanSelect => Item.CanAddFile;
+        public bool CanSelect => this.Item.CanAddFile;
 
-        public bool CanCreateFolder => Item.CanAddFolder;
+        public bool CanCreateFolder => this.Item.CanAddFolder;
 
         public ObservableCollection<SolutionItemViewModel> Children { get; }
 
         public bool IsSelected
         {
-            get => CanSelect && _isSelected;
+            get => this.CanSelect && this.isSelected;
             set
             {
-                if (CanSelect && value != _isSelected)
+                if (this.CanSelect && value != this.isSelected)
                 {
-                    _isSelected = value;
-                    OnPropertyChanged(nameof(IsSelected));
+                    this.isSelected = value;
+                    this.OnPropertyChanged(nameof(this.IsSelected));
                 }
             }
         }
 
         public async Task<SolutionItemViewModel> CreateFolderAsync(string newFolderName)
         {
-            if (CanCreateFolder && Item is ProjectModelBase project)
+            if (this.CanCreateFolder && this.Item is ProjectModelBase project)
             {
                 var newFolder = await project.AddFolderAsync(newFolderName);
                 var newFolderViewModel = new SolutionItemViewModel(newFolder);
-                Children.Add(newFolderViewModel);
+                this.Children.Add(newFolderViewModel);
                 return newFolderViewModel;
             }
 

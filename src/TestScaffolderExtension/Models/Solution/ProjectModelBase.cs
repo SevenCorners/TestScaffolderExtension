@@ -1,26 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using EnvDTE;
-
-namespace TestScaffolderExtension.Models.Solution
+﻿namespace TestScaffolderExtension.Models.Solution
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using EnvDTE;
+
     public abstract class ProjectModelBase : SolutionModelBase
     {
-        protected ProjectModelBase(SolutionModelBase parent) : base(parent) { }
-
-        public override bool CanAddFile => true;
-        public override bool CanAddFolder => true;
-
-        public async Task<ProjectFolderModel> AddFolderAsync(string folderName)
+        protected ProjectModelBase(SolutionModelBase parent)
+            : base(parent)
         {
-            var newFolder = new ProjectFolderModel(this, await AddFolderInternalAsync(folderName));
-            await newFolder.IterateChildrenAsync();
-            Children.Add(newFolder);
-            return newFolder;
         }
 
-        protected abstract Task<ProjectItem> AddFolderInternalAsync(string folderName);
+        public override bool CanAddFile => true;
+
+        public override bool CanAddFolder => true;
 
         public async Task<FileModel> AddFileAsync(string fileName, string fileContents)
         {
@@ -28,14 +22,30 @@ namespace TestScaffolderExtension.Models.Solution
             var tempFilePath = GetTempFilePath(tempFolderPath, fileName);
 
             await WriteTempFileContentsAsync(fileContents, tempFilePath);
-            var addedFile = await CopyFileFromPathAsync(tempFilePath);
+            var addedFile = await this.CopyFileFromPathAsync(tempFilePath);
 
             RemoveTempFolder(tempFolderPath);
 
             return addedFile;
         }
 
-        protected abstract Task<FileModel> CopyFileFromPathAsync(string tempFilePath);
+        public async Task<ProjectFolderModel> AddFolderAsync(string folderName)
+        {
+            var newFolder = new ProjectFolderModel(this, await this.AddFolderInternalAsync(folderName));
+            await newFolder.IterateChildrenAsync();
+            this.Children.Add(newFolder);
+            return newFolder;
+        }
+
+        protected static string GetTempFilePath(string tempFolderPath, string fileName)
+        {
+            return Path.Combine(tempFolderPath, fileName);
+        }
+
+        protected static string GetTempFolderPath()
+        {
+            return Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())).FullName;
+        }
 
         protected static void RemoveTempFolder(string tempFolderPath)
         {
@@ -50,14 +60,8 @@ namespace TestScaffolderExtension.Models.Solution
             }
         }
 
-        protected static string GetTempFolderPath()
-        {
-            return Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())).FullName;
-        }
+        protected abstract Task<ProjectItem> AddFolderInternalAsync(string folderName);
 
-        protected static string GetTempFilePath(string tempFolderPath, string fileName)
-        {
-            return Path.Combine(tempFolderPath, fileName);
-        }
+        protected abstract Task<FileModel> CopyFileFromPathAsync(string tempFilePath);
     }
 }

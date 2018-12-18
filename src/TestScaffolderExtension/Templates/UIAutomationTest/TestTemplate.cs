@@ -31,7 +31,7 @@ namespace TestScaffolderExtension.Templates.UIAutomationTest
             this.Write("\r\n");
             
             #line 7 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
- foreach(var usingStatement in Usings)
+ foreach(var usingStatement in usings)
 {
             
             #line default
@@ -52,42 +52,42 @@ namespace TestScaffolderExtension.Templates.UIAutomationTest
             this.Write("using ");
             
             #line 11 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_testLocation.GetFullPathForNamespace().Trim('.')));
+            this.Write(this.ToStringHelper.ToStringWithCulture(testLocation.GetFullPathForNamespace().Trim('.')));
             
             #line default
             #line hidden
             this.Write(";\r\n\r\nnamespace ");
             
             #line 13 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_testLocation.GetFullPathForNamespace().Trim('.')));
+            this.Write(this.ToStringHelper.ToStringWithCulture(testLocation.GetFullPathForNamespace().Trim('.')));
             
             #line default
             #line hidden
             this.Write("\r\n{\r\n    [TestFixture]\r\n    public class ");
             
             #line 16 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.TestClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.TestClassName));
             
             #line default
             #line hidden
             this.Write(" : ");
             
             #line 16 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.TestTypeBaseClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.TestTypeBaseClassName));
             
             #line default
             #line hidden
             this.Write("\r\n    {\r\n        private ");
             
             #line 18 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageClassName));
             
             #line default
             #line hidden
             this.Write(" ");
             
             #line 18 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageTypeNameAsPrivateField));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageTypeNameAsPrivateField));
             
             #line default
             #line hidden
@@ -105,14 +105,14 @@ namespace TestScaffolderExtension.Templates.UIAutomationTest
         [Category(TestCategories.TestTypes.");
             
             #line 29 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.TestTypeCategory));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.TestTypeCategory));
             
             #line default
             #line hidden
             this.Write(")]\r\n        public void Example");
             
             #line 30 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\TestTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.TestTypeCategory));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.TestTypeCategory));
             
             #line default
             #line hidden

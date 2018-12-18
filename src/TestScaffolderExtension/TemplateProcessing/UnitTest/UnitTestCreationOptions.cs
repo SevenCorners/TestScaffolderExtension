@@ -1,77 +1,61 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using System.Linq;
-using TestScaffolderExtension.Models.Analysis;
-
-namespace TestScaffolderExtension.Processors
+﻿namespace TestScaffolderExtension.Processors
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using TestScaffolderExtension.Models.Analysis;
+
     public class UnitTestCreationOptions
     {
         public UnitTestCreationOptions()
         {
-            ShouldCreateParentFolder = true;
-            ShouldCreateUnitTestBaseClass = true;
+            this.ShouldCreateParentFolder = true;
+            this.ShouldCreateUnitTestBaseClass = true;
         }
 
-        public UnitTestCreationOptions(MethodDeclarationSyntax method, SemanticModel semanticModel) : this()
+        public UnitTestCreationOptions(MethodDeclarationSyntax method, SemanticModel semanticModel)
+            : this()
         {
-            SetRoslynValues(method, semanticModel);
+            this.SetRoslynValues(method, semanticModel);
         }
-
-        public bool ShouldCreateParentFolder { get; set; }
-        public bool ShouldCreateUnitTestBaseClass { get; set; }
-
-
-        public string ClassUnderTestNamespace { get; private set; }
-        public string ClassUnderTestName { get; private set; }
-        public string UnitTestBaseClassName { get; private set; }
 
         public ConstructorInformation ClassUnderTestConstructor { get; private set; }
 
-        public string UnitTestFolderName { get; private set; }
-        public string UnitTestBaseClassFileName { get; private set; }
+        public string ClassUnderTestName { get; private set; }
 
-        public readonly List<string> OtherNamespaces = new List<string>();
+        public string ClassUnderTestNamespace { get; private set; }
 
         public string MethodUnderTestName { get; private set; }
-        public string UnitTestClassName { get; private set; }
-        public string UnitTestClassFileName { get; private set; }
-        public string MethodUnderTestReturnTypeName { get; private set; }
-        public string MethodUnderTestReturnTypeNamespace { get; private set; }
 
         public List<ParameterInformation> MethodUnderTestParameters { get; private set; }
 
-        private void SetRoslynValues(MethodDeclarationSyntax method, SemanticModel semanticModel)
-        {
-            MethodUnderTestName = method.Identifier.ValueText;
-            UnitTestClassName = MethodUnderTestName;
-            UnitTestClassFileName = $"{UnitTestClassName}.cs";
+        public string MethodUnderTestReturnTypeName { get; private set; }
 
-            MethodUnderTestReturnTypeName = method.ReturnType.ToString();
-            OtherNamespaces.AddRange(GetNamespaces(method.ReturnType, semanticModel));
+        public string MethodUnderTestReturnTypeNamespace { get; private set; }
 
-            var classUnderTest = semanticModel.GetDeclaredSymbol(method.Parent);
-            var classDeclaration = method.Parent as TypeDeclarationSyntax;
-            ClassUnderTestConstructor = GetConstructor(classDeclaration, semanticModel);
+        public List<string> OtherNamespaces { get; } = new List<string>();
 
-            ClassUnderTestName = classUnderTest.Name;
-            ClassUnderTestNamespace = classUnderTest.ContainingNamespace.ToDisplayString();
+        public bool ShouldCreateParentFolder { get; set; }
 
+        public bool ShouldCreateUnitTestBaseClass { get; set; }
 
+        public string UnitTestBaseClassFileName { get; private set; }
 
-            UnitTestFolderName = $"{ClassUnderTestName}Tests";
-            UnitTestBaseClassName = $"{ClassUnderTestName}TestsBase";
-            UnitTestBaseClassFileName = $"{UnitTestBaseClassName}.cs";
-            MethodUnderTestParameters = GetFullParameterInfo(method.ParameterList.Parameters, semanticModel);
-        }
+        public string UnitTestBaseClassName { get; private set; }
+
+        public string UnitTestClassFileName { get; private set; }
+
+        public string UnitTestClassName { get; private set; }
+
+        public string UnitTestFolderName { get; private set; }
 
         private ConstructorInformation GetConstructor(TypeDeclarationSyntax classDeclaration, SemanticModel semanticModel)
         {
             var constructorType = classDeclaration is ClassDeclarationSyntax ? ConstructorType.New : ConstructorType.Default;
 
-            if(classDeclaration.Identifier.ValueText.Equals("string", System.StringComparison.OrdinalIgnoreCase))
+            if (classDeclaration.Identifier.ValueText.Equals("string", System.StringComparison.OrdinalIgnoreCase))
             {
                 return new ConstructorInformation(classDeclaration.Identifier.ValueText, ConstructorType.Default);
             }
@@ -82,7 +66,7 @@ namespace TestScaffolderExtension.Processors
                 return new ConstructorInformation(classDeclaration.Identifier.ValueText, constructorType);
             }
 
-            return new ConstructorInformation(simplestConstructor.Identifier.ValueText, constructorType, GetSimpleParameterInfo(simplestConstructor.ParameterList.Parameters, semanticModel));
+            return new ConstructorInformation(simplestConstructor.Identifier.ValueText, constructorType, this.GetSimpleParameterInfo(simplestConstructor.ParameterList.Parameters, semanticModel));
         }
 
         private ConstructorInformation GetConstructor(ParameterSyntax parameter, SemanticModel semanticModel)
@@ -90,7 +74,7 @@ namespace TestScaffolderExtension.Processors
             var parameterTypeSymbol = semanticModel.GetDeclaredSymbol(parameter).Type;
             var constructorType = parameterTypeSymbol.IsValueType ? ConstructorType.Default : ConstructorType.New;
 
-            if(parameterTypeSymbol.ToDisplayString().Equals("string", System.StringComparison.OrdinalIgnoreCase))
+            if (parameterTypeSymbol.ToDisplayString().Equals("string", System.StringComparison.OrdinalIgnoreCase))
             {
                 constructorType = ConstructorType.Default;
             }
@@ -104,8 +88,8 @@ namespace TestScaffolderExtension.Processors
             var simplestConstructor = constructors.FirstOrDefault();
             var constructorParameters = simplestConstructor?.Parameters.AsEnumerable() ?? Enumerable.Empty<IParameterSymbol>();
 
-            var constructorName = GetConstructorName(parameterTypeSymbol);
-            return new ConstructorInformation(constructorName, constructorType, GetSimpleParameterInfo(constructorParameters));
+            var constructorName = this.GetConstructorName(parameterTypeSymbol);
+            return new ConstructorInformation(constructorName, constructorType, this.GetSimpleParameterInfo(constructorParameters));
         }
 
         private string GetConstructorName(ITypeSymbol typeSymbol)
@@ -118,6 +102,29 @@ namespace TestScaffolderExtension.Processors
             return typeSymbol.ToDisplayString();
         }
 
+        private List<ParameterInformation> GetFullParameterInfo(SeparatedSyntaxList<ParameterSyntax> parameters, SemanticModel semanticModel)
+        {
+            return parameters.Select(p => new ParameterInformation
+            {
+                Name = p.Identifier.ValueText,
+                SimpleTypeName = p.Type.ToString(),
+                Namespaces = this.GetNamespaces(p.Type, semanticModel),
+                Constructor = this.GetConstructor(p, semanticModel)
+            }).ToList();
+        }
+
+        private IEnumerable<string> GetNamespaces(TypeSyntax type, SemanticModel model)
+        {
+            yield return model.GetTypeInfo(type).Type.ContainingNamespace.ToDisplayString();
+            if (type is GenericNameSyntax generic)
+            {
+                foreach (var argNamespace in generic.TypeArgumentList.Arguments.SelectMany(a => this.GetNamespaces(a, model)))
+                {
+                    yield return argNamespace;
+                }
+            }
+        }
+
         private List<ParameterInformation> GetSimpleParameterInfo(IEnumerable<IParameterSymbol> constructorParameters)
         {
             return constructorParameters.Select(p => new ParameterInformation
@@ -128,37 +135,36 @@ namespace TestScaffolderExtension.Processors
             }).ToList();
         }
 
-        private List<ParameterInformation> GetFullParameterInfo(SeparatedSyntaxList<ParameterSyntax> parameters, SemanticModel semanticModel)
-        {
-            return parameters.Select(p => new ParameterInformation
-            {
-                Name = p.Identifier.ValueText,
-                SimpleTypeName = p.Type.ToString(),
-                Namespaces = GetNamespaces(p.Type, semanticModel),
-                Constructor = GetConstructor(p, semanticModel)
-            }).ToList();
-        }
-
         private List<ParameterInformation> GetSimpleParameterInfo(SeparatedSyntaxList<ParameterSyntax> parameters, SemanticModel semanticModel)
         {
             return parameters.Select(p => new ParameterInformation
             {
                 Name = p.Identifier.ValueText,
                 SimpleTypeName = p.Type.ToString(),
-                Namespaces = GetNamespaces(p.Type, semanticModel)
+                Namespaces = this.GetNamespaces(p.Type, semanticModel)
             }).ToList();
         }
 
-        private IEnumerable<string> GetNamespaces(TypeSyntax type, SemanticModel model)
+        private void SetRoslynValues(MethodDeclarationSyntax method, SemanticModel semanticModel)
         {
-            yield return model.GetTypeInfo(type).Type.ContainingNamespace.ToDisplayString();
-            if (type is GenericNameSyntax generic)
-            {
-                foreach (var argNamespace in generic.TypeArgumentList.Arguments.SelectMany(a => GetNamespaces(a, model)))
-                {
-                    yield return argNamespace;
-                }
-            }
+            this.MethodUnderTestName = method.Identifier.ValueText;
+            this.UnitTestClassName = this.MethodUnderTestName;
+            this.UnitTestClassFileName = $"{this.UnitTestClassName}.cs";
+
+            this.MethodUnderTestReturnTypeName = method.ReturnType.ToString();
+            this.OtherNamespaces.AddRange(this.GetNamespaces(method.ReturnType, semanticModel));
+
+            var classUnderTest = semanticModel.GetDeclaredSymbol(method.Parent);
+            var classDeclaration = method.Parent as TypeDeclarationSyntax;
+            this.ClassUnderTestConstructor = this.GetConstructor(classDeclaration, semanticModel);
+
+            this.ClassUnderTestName = classUnderTest.Name;
+            this.ClassUnderTestNamespace = classUnderTest.ContainingNamespace.ToDisplayString();
+
+            this.UnitTestFolderName = $"{this.ClassUnderTestName}Tests";
+            this.UnitTestBaseClassName = $"{this.ClassUnderTestName}TestsBase";
+            this.UnitTestBaseClassFileName = $"{this.UnitTestBaseClassName}.cs";
+            this.MethodUnderTestParameters = this.GetFullParameterInfo(method.ParameterList.Parameters, semanticModel);
         }
     }
 }

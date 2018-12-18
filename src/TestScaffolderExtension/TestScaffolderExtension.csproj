@@ -45,6 +45,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Custom.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,9 +57,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateUIAutomationTestsCommand.cs" />
+    <Compile Include="Extensions\IAsyncServiceProviderExtensions.cs" />
     <Compile Include="Models\VisualStudioObjectModel.cs" />
     <Compile Include="Commands\MenuCommandBase.cs" />
-    <Compile Include="Extensions\IServiceProviderExtensions.cs" />
     <Compile Include="Models\AutomationTestType.cs" />
     <Compile Include="Models\Solution\FileModel.cs" />
     <Compile Include="Models\Solution\ProjectFolderModel.cs" />
@@ -115,7 +116,7 @@
     <Compile Include="Views\BaseDialogWindow.cs" />
     <Compile Include="Commands\CreateUnitTestsForMethodCommand.cs" />
     <Compile Include="PackageDetails\TestScaffolderPackage.cs" />
-    <Compile Include="Views\Converters\RadioButtonToEnumConverter.cs" />
+    <Compile Include="Views\Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Views\CreateFolderWindow.xaml.cs">
       <DependentUpon>CreateFolderWindow.xaml</DependentUpon>
     </Compile>
@@ -448,6 +449,8 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.VisualStudio.SDK.Analyzers.15.8.31\analyzers\cs\Microsoft.VisualStudio.SDK.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.8.132\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

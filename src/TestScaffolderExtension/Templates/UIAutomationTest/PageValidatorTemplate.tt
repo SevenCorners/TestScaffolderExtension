@@ -4,20 +4,20 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-<# foreach(var usingStatement in Usings)
+<# foreach(var usingStatement in usings)
 {#>
 <#=$"using {usingStatement};"#>
 <#}#>
 
-namespace <#=_testLocation.GetFullPathForNamespace().Trim('.')#>
+namespace <#=testLocation.GetFullPathForNamespace().Trim('.')#>
 {
-    public class <#=_automationTestOptions.PageValidatorClassName#>: BasePage
+    public class <#=automationTestOptions.PageValidatorClassName#>: BasePage
     {
-        public <#=_automationTestOptions.PageValidatorClassName#>(IWebDriver browser): base(browser)
+        public <#=automationTestOptions.PageValidatorClassName#>(IWebDriver browser): base(browser)
         {
         }
 
-        protected <#=_automationTestOptions.PageElementMapClassName#>  Map => new <#=_automationTestOptions.PageElementMapClassName#> (_browser);
+        protected <#=automationTestOptions.PageElementMapClassName#>  Map => new <#=automationTestOptions.PageElementMapClassName#> (_browser);
 
         public void ExampleValidation()
         {

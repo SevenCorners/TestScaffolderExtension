@@ -31,7 +31,7 @@ namespace TestScaffolderExtension.Templates.UIAutomationTest
             this.Write("\r\n");
             
             #line 7 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
- foreach(var usingStatement in Usings)
+ foreach(var usingStatement in usings)
 {
             
             #line default
@@ -52,49 +52,49 @@ namespace TestScaffolderExtension.Templates.UIAutomationTest
             this.Write("\r\nnamespace ");
             
             #line 12 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_testLocation.GetFullPathForNamespace().Trim('.')));
+            this.Write(this.ToStringHelper.ToStringWithCulture(testLocation.GetFullPathForNamespace().Trim('.')));
             
             #line default
             #line hidden
             this.Write("\r\n{\r\n    public class ");
             
             #line 14 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageClassName));
             
             #line default
             #line hidden
             this.Write(" : BasePage\r\n    {\r\n        public ");
             
             #line 16 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageClassName));
             
             #line default
             #line hidden
             this.Write("(IWebDriver driver): base(driver)\r\n        {\r\n        }\r\n\r\n        protected ");
             
             #line 20 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageElementMapClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageElementMapClassName));
             
             #line default
             #line hidden
             this.Write("  Map => new ");
             
             #line 20 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageElementMapClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageElementMapClassName));
             
             #line default
             #line hidden
             this.Write(" (_browser);\r\n\r\n        public ");
             
             #line 22 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageValidatorClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageValidatorClassName));
             
             #line default
             #line hidden
             this.Write(" Validate()\r\n        {\r\n            return new ");
             
             #line 24 "C:\GitHub\SevenCorners\TestScaffolderExtension\src\TestScaffolderExtension\Templates\UIAutomationTest\PageTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(_automationTestOptions.PageValidatorClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(automationTestOptions.PageValidatorClassName));
             
             #line default
             #line hidden

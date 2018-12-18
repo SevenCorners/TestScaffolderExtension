@@ -1,22 +1,24 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using TestScaffolderExtension.Models.Solution;
-using TestScaffolderExtension.Processors;
-
-namespace TestScaffolderExtension.ViewModels
+﻿namespace TestScaffolderExtension.ViewModels
 {
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using TestScaffolderExtension.Models.Solution;
+    using TestScaffolderExtension.Processors;
+
     public class CreateUnitTestsViewModel : ViewModelBase
     {
-        private SolutionItemViewModel _selectedLocation;
+        private SolutionItemViewModel selectedLocation;
 
-        public CreateUnitTestsViewModel() { }
+        public CreateUnitTestsViewModel()
+        {
+        }
 
         public CreateUnitTestsViewModel(SolutionModel solution, UnitTestCreationOptions unitTestCreationOptions)
         {
-            UnitTestCreationOptions = unitTestCreationOptions;
-            SolutionItems = new ObservableCollection<SolutionItemViewModel>();
+            this.UnitTestCreationOptions = unitTestCreationOptions;
+            this.SolutionItems = new ObservableCollection<SolutionItemViewModel>();
 
-            IterateProjects(solution);
+            this.IterateProjects(solution);
         }
 
         public UnitTestCreationOptions UnitTestCreationOptions { get; }
@@ -25,46 +27,49 @@ namespace TestScaffolderExtension.ViewModels
 
         public SolutionItemViewModel SelectedItem
         {
-            get => _selectedLocation;
+            get => this.selectedLocation;
             set
             {
-                _selectedLocation = value;
-                OnPropertyChanged(nameof(CanCreateTests));
-                OnPropertyChanged(nameof(CanCreateFolder));
+                this.selectedLocation = value;
+                this.OnPropertyChanged(nameof(this.CanCreateTests));
+                this.OnPropertyChanged(nameof(this.CanCreateFolder));
             }
         }
 
         public bool CreateFolderCheckboxChecked
         {
-            get => UnitTestCreationOptions.ShouldCreateParentFolder;
+            get => this.UnitTestCreationOptions.ShouldCreateParentFolder;
             set
             {
-                UnitTestCreationOptions.ShouldCreateParentFolder = value;
-                OnPropertyChanged(nameof(CreateFolderCheckboxChecked));
+                this.UnitTestCreationOptions.ShouldCreateParentFolder = value;
+                this.OnPropertyChanged(nameof(this.CreateFolderCheckboxChecked));
             }
         }
 
         public bool CreateBaseClassCheckboxChecked
         {
-            get => UnitTestCreationOptions.ShouldCreateUnitTestBaseClass;
+            get => this.UnitTestCreationOptions.ShouldCreateUnitTestBaseClass;
             set
             {
-                UnitTestCreationOptions.ShouldCreateUnitTestBaseClass = value;
-                OnPropertyChanged(nameof(CreateBaseClassCheckboxChecked));
+                this.UnitTestCreationOptions.ShouldCreateUnitTestBaseClass = value;
+                this.OnPropertyChanged(nameof(this.CreateBaseClassCheckboxChecked));
             }
         }
 
-        public bool CanCreateTests => SelectedItem?.CanSelect ?? false;
+        public bool CanCreateTests => this.SelectedItem?.CanSelect ?? false;
 
-        public bool CanCreateFolder => SelectedItem?.CanCreateFolder ?? false;
+        public bool CanCreateFolder => this.SelectedItem?.CanCreateFolder ?? false;
 
         private void IterateProjects(SolutionModel solution)
         {
-            if (solution.Children == null) return;
+            if (solution.Children == null)
+            {
+                return;
+            }
 
             foreach (var child in solution.Children.OrderBy(c => c.SortOrder).ThenBy(c => c.Name))
             {
-                SolutionItems.Add(new SolutionItemViewModel(child));
+                this.SolutionItems.Add(new SolutionItemViewModel(child));
             }
         }
     }

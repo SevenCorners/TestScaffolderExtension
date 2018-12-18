@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.PlatformUI;
-
-namespace TestScaffolderExtension.Views
+﻿namespace TestScaffolderExtension.Views
 {
+    using Microsoft.VisualStudio.PlatformUI;
+
     public class BaseDialogWindow : DialogWindow
     {
         public BaseDialogWindow()
         {
-            HasMaximizeButton = true;
-            HasMinimizeButton = true;
+            this.HasMaximizeButton = true;
+            this.HasMinimizeButton = true;
         }
     }
 }

@@ -2,18 +2,18 @@
 {
     public class CreateFolderViewModel : ViewModelBase
     {
-        private string _newFolderName;
+        private string newFolderName;
 
-        public bool CanCreateFolder => !string.IsNullOrEmpty(NewFolderName);
+        public bool CanCreateFolder => !string.IsNullOrEmpty(this.NewFolderName);
 
         public string NewFolderName
         {
-            get => _newFolderName;
+            get => this.newFolderName;
             set
             {
-                _newFolderName = value;
-                OnPropertyChanged(nameof(NewFolderName));
-                OnPropertyChanged(nameof(CanCreateFolder));
+                this.newFolderName = value;
+                this.OnPropertyChanged(nameof(this.NewFolderName));
+                this.OnPropertyChanged(nameof(this.CanCreateFolder));
             }
         }
     }
