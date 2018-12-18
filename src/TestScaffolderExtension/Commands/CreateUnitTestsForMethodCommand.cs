@@ -1,14 +1,11 @@
 ﻿using System;
-using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using System.Windows;
-using EnvDTE;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Threading;
@@ -35,11 +32,9 @@ namespace TestScaffolderExtension.Commands
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public CreateUnitTestsForMethodCommand(AsyncPackage package, OleMenuCommandService commandService)
-            : base(package, commandService)
-        {
-            AddCommandToMenu(commandService);
-        }
+        public CreateUnitTestsForMethodCommand(AsyncPackage package)
+            : base(package)
+        { }
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -47,12 +42,8 @@ namespace TestScaffolderExtension.Commands
         /// <param name="package">Owner package, not null.</param>
         public static async Task InitializeAsync(AsyncPackage package)
         {
-            // Verify the current thread is the UI thread - the call to AddCommand in CreateUnitTestsForMethodCommand's constructor requires
-            // the UI thread.
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var commandService = await package.GetAsAsync<IMenuCommandService, OleMenuCommandService>();
-            Instance = new CreateUnitTestsForMethodCommand(package, commandService);
+            var instance = new CreateUnitTestsForMethodCommand(package);
+            await instance.InitializeInternalAsync();
         }
 
         protected override async Task ExecuteCommandAsync(OleMenuCommand menuCommand)
@@ -112,11 +103,7 @@ namespace TestScaffolderExtension.Commands
 
         private async Task<ProjectModelBase> ShowCreateUnitTestsForMethodModalWindowAsync(UnitTestCreationOptions unitTestCreationOptions)
         {
-            var dte = await AsyncServiceProvider.GetAsync<DTE>();
-
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            var solutionModel = new SolutionModel(dte.Solution);
-            await solutionModel.IterateChildrenAsync();
+            var solutionModel = await VisualStudio.GetSolutionAsync();
             var createUnitTestsViewModel = new CreateUnitTestsViewModel(solutionModel, unitTestCreationOptions);
 
             var createUnitTestsForMethodWindow = new CreateUnitTestsForMethodWindow(createUnitTestsViewModel)

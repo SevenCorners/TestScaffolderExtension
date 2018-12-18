@@ -15,7 +15,6 @@ namespace <#=_unitTestProjectLocation.GetFullPathForNamespace().Trim('.')#>
     [TestClass]
 	public class <#=_unitTestCreationOptions.UnitTestClassName#> : <#=_unitTestCreationOptions.UnitTestBaseClassName#>
 	{
-
 <# foreach(var parameter in _unitTestCreationOptions.MethodUnderTestParameters)
 {#>
 		<#=$"private {parameter.SimpleTypeName} {parameter.NameAsPrivateField};"#>

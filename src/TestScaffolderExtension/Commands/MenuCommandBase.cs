@@ -1,7 +1,10 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using TestScaffolderExtension.Extensions;
+using TestScaffolderExtension.Models;
 using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider;
 using Task = System.Threading.Tasks.Task;
 
@@ -13,11 +16,6 @@ namespace TestScaffolderExtension.Commands
         protected abstract Guid CommandSet { get; }
 
         /// <summary>
-        /// Gets the instance of the command.
-        /// </summary>
-        public static MenuCommandBase Instance { get; protected set; }
-
-        /// <summary>
         /// Gets the asynchronous service provider from the owner package.
         /// </summary>
         protected IAsyncServiceProvider AsyncServiceProvider { get; }
@@ -27,14 +25,25 @@ namespace TestScaffolderExtension.Commands
         /// </summary>
         protected IServiceProvider ServiceProvider { get; }
 
-        protected MenuCommandBase(AsyncPackage asyncPackage, OleMenuCommandService commandService)
+        protected VisualStudioObjectModel VisualStudio { get; private set; }
+
+        protected MenuCommandBase(AsyncPackage asyncPackage)
         {
             AsyncServiceProvider = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
             ServiceProvider = asyncPackage as IServiceProvider ?? throw new ArgumentException($"Unable to cast {nameof(asyncPackage)} as {nameof(IServiceProvider)}.");
         }
 
-        protected void AddCommandToMenu(OleMenuCommandService commandService)
+        protected async Task InitializeInternalAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            await AddCommandToMenuAsync();
+            VisualStudio = new VisualStudioObjectModel(await AsyncServiceProvider.GetAsync<DTE>());
+        }
+
+        protected async Task AddCommandToMenuAsync()
+        {
+            var commandService = await AsyncServiceProvider.GetAsAsync<IMenuCommandService, OleMenuCommandService>();
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
@@ -59,13 +68,7 @@ namespace TestScaffolderExtension.Commands
             }
             catch (Exception ex)
             {
-                VsShellUtilities.ShowMessageBox(
-                    (IServiceProvider)AsyncServiceProvider,
-                    ex.Message,
-                    "Not a project or project folder",
-                    OLEMSGICON.OLEMSGICON_WARNING,
-                    OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                ShowError("Not a project or project folder", ex.Message);
             }
         }
 
