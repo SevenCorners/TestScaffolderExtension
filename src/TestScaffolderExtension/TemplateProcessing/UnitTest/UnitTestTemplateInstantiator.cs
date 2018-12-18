@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TestScaffolderExtension.Models.Solution;
 using TestBaseClassTemplate = TestScaffolderExtension.Templates.UnitTest.TestBaseClassTemplate;
 using TestClassTemplate = TestScaffolderExtension.Templates.UnitTest.TestClassTemplate;
@@ -7,37 +8,40 @@ namespace TestScaffolderExtension.Processors
 {
     internal static class UnitTestTemplateInstantiator
     {
-        internal static IEnumerable<FileModel> InstantiateUnitTestTemplate(ProjectModelBase locationForTest, UnitTestCreationOptions unitTestCreationOptions)
+        internal static async Task<IEnumerable<FileModel>> InstantiateUnitTestTemplateAsync(ProjectModelBase locationForTest, UnitTestCreationOptions unitTestCreationOptions)
         {
-            var unitTestProjectLocation = GetUnitTestProjectLocation(locationForTest, unitTestCreationOptions);
+            var unitTestProjectLocation = await GetUnitTestProjectLocationAsync(locationForTest, unitTestCreationOptions);
 
+            var instantiationTasks = new List<Task<FileModel>>();
             if (unitTestCreationOptions.ShouldCreateUnitTestBaseClass)
             {
-                yield return AddUnitTestBaseClass(unitTestProjectLocation, unitTestCreationOptions);
+                instantiationTasks.Add(AddUnitTestBaseClassAsync(unitTestProjectLocation, unitTestCreationOptions));
             }
 
-            yield return AddUnitTestClass(unitTestProjectLocation, unitTestCreationOptions);
+            instantiationTasks.Add(AddUnitTestClassAsync(unitTestProjectLocation, unitTestCreationOptions));
+
+            return await Task.WhenAll(instantiationTasks);
         }
 
-        private static ProjectModelBase GetUnitTestProjectLocation(ProjectModelBase locationForTest, UnitTestCreationOptions creationOptions)
+        private static async Task<ProjectModelBase> GetUnitTestProjectLocationAsync(ProjectModelBase locationForTest, UnitTestCreationOptions creationOptions)
         {
             if (creationOptions.ShouldCreateParentFolder)
             {
-                return locationForTest.AddFolder(creationOptions.UnitTestFolderName);
+                return await locationForTest.AddFolderAsync(creationOptions.UnitTestFolderName);
             }
             return locationForTest;
         }
 
-        private static FileModel AddUnitTestBaseClass(ProjectModelBase unitTestProjectLocation, UnitTestCreationOptions creationOptions)
+        private static async Task<FileModel> AddUnitTestBaseClassAsync(ProjectModelBase unitTestProjectLocation, UnitTestCreationOptions creationOptions)
         {
             var unitTestBaseClass = new TestBaseClassTemplate(unitTestProjectLocation, creationOptions);
-            return unitTestProjectLocation.AddFile(creationOptions.UnitTestBaseClassFileName, unitTestBaseClass.TransformText());
+            return await unitTestProjectLocation.AddFileAsync(creationOptions.UnitTestBaseClassFileName, unitTestBaseClass.TransformText());
         }
 
-        private static FileModel AddUnitTestClass(ProjectModelBase unitTestProjectLocation, UnitTestCreationOptions unitTestCreationOptions)
+        private static async Task<FileModel> AddUnitTestClassAsync(ProjectModelBase unitTestProjectLocation, UnitTestCreationOptions unitTestCreationOptions)
         {
             var unitTestClass = new TestClassTemplate(unitTestProjectLocation, unitTestCreationOptions);
-            return unitTestProjectLocation.AddFile(unitTestCreationOptions.UnitTestClassFileName, unitTestClass.TransformText());
+            return await unitTestProjectLocation.AddFileAsync(unitTestCreationOptions.UnitTestClassFileName, unitTestClass.TransformText());
         }
     }
 }

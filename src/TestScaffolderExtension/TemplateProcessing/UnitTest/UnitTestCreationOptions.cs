@@ -1,5 +1,4 @@
-﻿using EnvDTE;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -14,11 +13,6 @@ namespace TestScaffolderExtension.Processors
         {
             ShouldCreateParentFolder = true;
             ShouldCreateUnitTestBaseClass = true;
-        }
-
-        public UnitTestCreationOptions(CodeClass classUnderTest, CodeFunction methodUnderTest) : this()
-        {
-            SetDteValues(classUnderTest, methodUnderTest);
         }
 
         public UnitTestCreationOptions(MethodDeclarationSyntax method, SemanticModel semanticModel) : this()
@@ -77,6 +71,11 @@ namespace TestScaffolderExtension.Processors
         {
             var constructorType = classDeclaration is ClassDeclarationSyntax ? ConstructorType.New : ConstructorType.Default;
 
+            if(classDeclaration.Identifier.ValueText.Equals("string", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return new ConstructorInformation(classDeclaration.Identifier.ValueText, ConstructorType.Default);
+            }
+
             var simplestConstructor = classDeclaration.Members.OfType<ConstructorDeclarationSyntax>().OrderBy(c => c.ParameterList.Parameters.Count).FirstOrDefault();
             if (simplestConstructor == null)
             {
@@ -89,9 +88,20 @@ namespace TestScaffolderExtension.Processors
         private ConstructorInformation GetConstructor(ParameterSyntax parameter, SemanticModel semanticModel)
         {
             var parameterTypeSymbol = semanticModel.GetDeclaredSymbol(parameter).Type;
-            var simplestConstructor = parameterTypeSymbol.GetMembers().OfType<IMethodSymbol>().Where(m => m.MethodKind == MethodKind.Constructor).OrderBy(c => c.Parameters.Count()).FirstOrDefault();
-
             var constructorType = parameterTypeSymbol.IsValueType ? ConstructorType.Default : ConstructorType.New;
+
+            if(parameterTypeSymbol.ToDisplayString().Equals("string", System.StringComparison.OrdinalIgnoreCase))
+            {
+                constructorType = ConstructorType.Default;
+            }
+
+            if (constructorType == ConstructorType.Default)
+            {
+                return new ConstructorInformation(parameterTypeSymbol.ToDisplayString(), constructorType);
+            }
+
+            var constructors = parameterTypeSymbol.GetMembers().OfType<IMethodSymbol>().Where(m => m.MethodKind == MethodKind.Constructor).OrderBy(c => c.Parameters.Count());
+            var simplestConstructor = constructors.FirstOrDefault();
             var constructorParameters = simplestConstructor?.Parameters.AsEnumerable() ?? Enumerable.Empty<IParameterSymbol>();
 
             var constructorName = GetConstructorName(parameterTypeSymbol);
@@ -148,33 +158,6 @@ namespace TestScaffolderExtension.Processors
                 {
                     yield return argNamespace;
                 }
-            }
-        }
-
-        private void SetDteValues(CodeClass classUnderTest, CodeFunction methodUnderTest)
-        {
-            MethodUnderTestName = methodUnderTest.Name;
-            UnitTestClassName = methodUnderTest.Name;
-            UnitTestClassFileName = $"{UnitTestClassName}.cs";
-            ClassUnderTestName = classUnderTest.Name;
-            ClassUnderTestNamespace = classUnderTest.Namespace.Name;
-            UnitTestFolderName = $"{classUnderTest.Name}Tests";
-            UnitTestBaseClassName = $"{classUnderTest.Name}TestsBase";
-            UnitTestBaseClassFileName = $"{UnitTestBaseClassName}.cs";
-
-            SetDteMethodUnderTestReturnType(methodUnderTest);
-        }
-
-        private void SetDteMethodUnderTestReturnType(CodeFunction methodUnderTest)
-        {
-            if (methodUnderTest.Type.TypeKind == vsCMTypeRef.vsCMTypeRefCodeType)
-            {
-                MethodUnderTestReturnTypeNamespace = methodUnderTest.Type.CodeType.Namespace.FullName;
-                MethodUnderTestReturnTypeName = methodUnderTest.Type.CodeType.FullName.Replace(MethodUnderTestReturnTypeNamespace, string.Empty).Trim('.');
-            }
-            else
-            {
-                MethodUnderTestReturnTypeName = methodUnderTest.Type.AsString;
             }
         }
     }

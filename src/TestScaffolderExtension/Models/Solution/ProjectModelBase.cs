@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+using EnvDTE;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -10,33 +12,41 @@ namespace TestScaffolderExtension.Models.Solution
         public override bool CanAddFile => true;
         public override bool CanAddFolder => true;
 
-        public abstract ProjectFolderModel AddFolder(string folderName);
+        public async Task<ProjectFolderModel> AddFolderAsync(string folderName)
+        {
+            var newFolder = new ProjectFolderModel(this, await AddFolderInternalAsync(folderName));
+            await newFolder.IterateChildrenAsync();
+            Children.Add(newFolder);
+            return newFolder;
+        }
 
-        public FileModel AddFile(string fileName, string fileContents)
+        protected abstract Task<ProjectItem> AddFolderInternalAsync(string folderName);
+
+        public async Task<FileModel> AddFileAsync(string fileName, string fileContents)
         {
             var tempFolderPath = GetTempFolderPath();
             var tempFilePath = GetTempFilePath(tempFolderPath, fileName);
 
-            WriteTempFileContents(fileContents, tempFilePath);
-            var addedFile = CopyFileFromPath(tempFilePath);
+            await WriteTempFileContentsAsync(fileContents, tempFilePath);
+            var addedFile = await CopyFileFromPathAsync(tempFilePath);
 
             RemoveTempFolder(tempFolderPath);
 
             return addedFile;
         }
 
-        protected abstract FileModel CopyFileFromPath(string tempFilePath);
+        protected abstract Task<FileModel> CopyFileFromPathAsync(string tempFilePath);
 
         protected static void RemoveTempFolder(string tempFolderPath)
         {
             Directory.Delete(tempFolderPath, true);
         }
 
-        protected static void WriteTempFileContents(string fileContents, string tempFilePath)
+        protected static async Task WriteTempFileContentsAsync(string fileContents, string tempFilePath)
         {
             using (var writer = new StreamWriter(tempFilePath))
             {
-                writer.Write(fileContents);
+                await writer.WriteAsync(fileContents);
             }
         }
 

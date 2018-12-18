@@ -1,4 +1,7 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -11,28 +14,30 @@ namespace TestScaffolderExtension.Models.Solution
             _projectFolder = projectFolder;
         }
 
-        public override string Name => _projectFolder.Name;
         protected override ModelType ItemType => ModelType.ProjectFolder;
 
-        protected override FileModel CopyFileFromPath(string tempFilePath)
+        protected override async Task<FileModel> CopyFileFromPathAsync(string tempFilePath)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             return new FileModel(this, _projectFolder.ProjectItems.AddFromFileCopy(tempFilePath));
         }
 
-        public override ProjectFolderModel AddFolder(string folderName)
+        protected override async Task<ProjectItem> AddFolderInternalAsync(string folderName)
         {
-            var newFolder = new ProjectFolderModel(this, _projectFolder.ProjectItems.AddFolder(folderName));
-            Children.Add(newFolder);
-            return newFolder;
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            return _projectFolder.ProjectItems.AddFolder(folderName);
         }
 
-        public override void IterateChildren()
+        public override async Task IterateChildrenAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            Name = _projectFolder.Name;
+
             if(_projectFolder.ProjectItems?.GetEnumerator().MoveNext() ?? false)
             {
                 foreach(ProjectItem child in _projectFolder.ProjectItems)
                 {
-                    var childItem = SolutionModelFactory.BuildHierarchyTreeDown(this, child);
+                    var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, child);
                     if (childItem != null)
                     {
                         Children.Add(childItem);

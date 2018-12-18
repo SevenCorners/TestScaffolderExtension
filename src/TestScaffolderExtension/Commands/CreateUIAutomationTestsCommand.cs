@@ -41,40 +41,41 @@ namespace TestScaffolderExtension.Commands
             Instance = new CreateUIAutomationTestsCommand(package, commandService);
         }
 
-        protected override void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        {
-            menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatus;
-        }
+        //protected override void AddBeforeQueryStatus(OleMenuCommand menuCommand)
+        //{
+        //    menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatus;
+        //}
 
-        private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
-        {
-            if (!(sender is OleMenuCommand menuCommand)) return;
+        //private async void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        //{
+        //    if (!(sender is OleMenuCommand menuCommand)) return;
 
-            menuCommand.Visible = false;
-            menuCommand.Enabled = false;
+        //    menuCommand.Visible = false;
+        //    menuCommand.Enabled = false;
 
-            var dte = ServiceProvider.GetAs<DTE, DTE2>();
-            var selectedItems = GetSolutionWindowSelectedItems(dte);
+        //    var dte = await AsyncServiceProvider.GetAsAsync<DTE, DTE2>();
+        //    var selectedItems = await GetSolutionWindowSelectedItemsAsync(dte);
 
-            if (selectedItems.Count() != 1)
-            {
-                return;
-            }
+        //    if (selectedItems.Count() != 1)
+        //    {
+        //        return;
+        //    }
 
-            menuCommand.Visible = true;
-            menuCommand.Enabled = true;
-        }
+        //    menuCommand.Visible = true;
+        //    menuCommand.Enabled = true;
+        //}
 
         protected override async Task ExecuteCommandAsync(OleMenuCommand menuCommand)
         {
             var dte = await AsyncServiceProvider.GetAsAsync<DTE, DTE2>();
-            var selectedItems = GetSolutionWindowSelectedItems(dte);
-            var selectedProjectNode = SolutionModelFactory.BuildHierarchyPathUp(selectedItems.Single()) as ProjectModelBase;
+            var selectedItems = await GetSolutionWindowSelectedItemsAsync(dte);
+            var selectedProjectNode = await SolutionModelFactory.BuildHierarchyPathUpAsync(selectedItems.Single()) as ProjectModelBase;
 
             var automationTestOptions = await ShowCreateUIAutomationTestsWindowAsync(selectedProjectNode);
-            foreach(var file in UIAutomationTestTemplateInstantiator.Instantiate(selectedProjectNode, automationTestOptions))
+            var automationTestFiles = await UIAutomationTestTemplateInstantiator.InstantiateAsync(selectedProjectNode, automationTestOptions);
+            foreach (var file in automationTestFiles)
             {
-                file.Open();
+                await file.OpenAsync();
             }
         }
 
@@ -99,12 +100,20 @@ namespace TestScaffolderExtension.Commands
             return null;
         }
 
-        private IEnumerable<object> GetSolutionWindowSelectedItems(DTE2 dte)
+        private async Task<IEnumerable<object>> GetSolutionWindowSelectedItemsAsync(DTE2 dte)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             var ui = dte.Windows.Item(Constants.vsWindowKindSolutionExplorer).Object as UIHierarchy;
             var selectedItems = ui.SelectedItems as object[];
 
-            return selectedItems.Cast<UIHierarchyItem>().Select(h => h.Object);
+            var hierarchyItemObjects = new List<object>();
+            foreach (var item in selectedItems.Cast<UIHierarchyItem>())
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                hierarchyItemObjects.Add(item.Object);
+            }
+            return hierarchyItemObjects;
         }
     }
 }

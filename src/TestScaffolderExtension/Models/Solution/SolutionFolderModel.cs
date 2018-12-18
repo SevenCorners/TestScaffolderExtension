@@ -1,4 +1,6 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Task = System.Threading.Tasks.Task;
 
 namespace TestScaffolderExtension.Models.Solution
 {
@@ -11,7 +13,6 @@ namespace TestScaffolderExtension.Models.Solution
             _solutionFolder = solutionFolder;
         }
 
-        public override string Name => _solutionFolder.Name;
         public override string GetFullPathForNamespace()
         {
             return string.Empty;
@@ -19,13 +20,16 @@ namespace TestScaffolderExtension.Models.Solution
 
         protected override ModelType ItemType => ModelType.SolutionFolder;
 
-        public override void IterateChildren()
+        public override async Task IterateChildrenAsync()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            Name = _solutionFolder.Name;
+
             if (_solutionFolder.ProjectItems?.GetEnumerator().MoveNext() ?? false)
             {
                 foreach (ProjectItem item in _solutionFolder.ProjectItems)
                 {
-                    var childItem = SolutionModelFactory.BuildHierarchyTreeDown(this, item);
+                    var childItem = await SolutionModelFactory.BuildHierarchyTreeDownAsync(this, item);
                     if (childItem != null)
                     {
                         Children.Add(childItem);

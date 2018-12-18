@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TestScaffolderExtension.Models.Solution;
 using TestScaffolderExtension.Templates.UIAutomationTest;
 
@@ -6,42 +7,44 @@ namespace TestScaffolderExtension.Processors.UIAutomationTest
 {
     internal static class UIAutomationTestTemplateInstantiator
     {
-        internal static IEnumerable<FileModel> Instantiate(ProjectModelBase selectedProjectNode, UIAutomationTestCreationOptions automationTestOptions)
+        internal static async Task<IEnumerable<FileModel>> InstantiateAsync(ProjectModelBase selectedProjectNode, UIAutomationTestCreationOptions automationTestOptions)
         {
-            var testFolder = AddAutomationTestFolder(selectedProjectNode, automationTestOptions);
-            yield return AddAutomationTestClass(testFolder, automationTestOptions);
-            yield return AddAutomationPageClass(testFolder, automationTestOptions);
-            yield return AddAutomationPageElementMapClass(testFolder, automationTestOptions);
-            yield return AddAutomationPageValidatorClass(testFolder, automationTestOptions);
+            var testFolder = await AddAutomationTestFolderAsync(selectedProjectNode, automationTestOptions);
+
+            return await Task.WhenAll(
+                AddAutomationTestClassAsync(testFolder, automationTestOptions),
+                AddAutomationPageClassAsync(testFolder, automationTestOptions),
+                AddAutomationPageElementMapClassAsync(testFolder, automationTestOptions),
+                AddAutomationPageValidatorClassAsync(testFolder, automationTestOptions));
         }
 
-        private static FileModel AddAutomationPageValidatorClass(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
+        private static async Task<FileModel> AddAutomationPageValidatorClassAsync(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
         {
             var unitTestClass = new PageValidatorTemplate(testFolder, automationTestOptions);
-            return testFolder.AddFile($"{automationTestOptions.PageValidatorClassName}.cs", unitTestClass.TransformText());
+            return await testFolder.AddFileAsync($"{automationTestOptions.PageValidatorClassName}.cs", unitTestClass.TransformText());
         }
 
-        private static FileModel AddAutomationPageElementMapClass(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
+        private static async Task<FileModel> AddAutomationPageElementMapClassAsync(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
         {
             var unitTestClass = new PageElementMapTemplate(testFolder, automationTestOptions);
-            return testFolder.AddFile($"{automationTestOptions.PageElementMapClassName}.cs", unitTestClass.TransformText());
+            return await testFolder.AddFileAsync($"{automationTestOptions.PageElementMapClassName}.cs", unitTestClass.TransformText());
         }
 
-        private static FileModel AddAutomationPageClass(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
+        private static async Task<FileModel> AddAutomationPageClassAsync(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
         {
             var unitTestClass = new PageTemplate(testFolder, automationTestOptions);
-            return testFolder.AddFile($"{automationTestOptions.PageClassName}.cs", unitTestClass.TransformText());
+            return await testFolder.AddFileAsync($"{automationTestOptions.PageClassName}.cs", unitTestClass.TransformText());
         }
 
-        private static FileModel AddAutomationTestClass(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
+        private static async Task<FileModel> AddAutomationTestClassAsync(ProjectModelBase testFolder, UIAutomationTestCreationOptions automationTestOptions)
         {
             var unitTestClass = new TestTemplate(testFolder, automationTestOptions);
-            return testFolder.AddFile($"{automationTestOptions.TestClassName}.cs", unitTestClass.TransformText());
+            return await testFolder.AddFileAsync($"{automationTestOptions.TestClassName}.cs", unitTestClass.TransformText());
         }
 
-        private static ProjectModelBase AddAutomationTestFolder(ProjectModelBase locationForTest, UIAutomationTestCreationOptions creationOptions)
+        private static async Task<ProjectModelBase> AddAutomationTestFolderAsync(ProjectModelBase locationForTest, UIAutomationTestCreationOptions creationOptions)
         {
-            return locationForTest.AddFolder(creationOptions.TestFolderName);
+            return await locationForTest.AddFolderAsync(creationOptions.TestFolderName);
         }
     }
 }

@@ -31,13 +31,20 @@ namespace TestScaffolderExtension.PackageDetails
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
+    //[ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideAutoLoad(EditorWindowContextGuid, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideUIContextRule(EditorWindowContextGuid,
+        name: "Test Scaffolder Package Load",
+        expression: "CSharpEditorWindow | SingleSolutionItemSelected",
+        termNames: new[] { "CSharpEditorWindow", "SingleSolutionItemSelected" },
+        termValues: new[] { "ActiveEditorContentType:CSharp", "ActiveProjectFlavor:FAE04EC0-301F-11D3-BF4B-00C04F79EFBC" })]
     public sealed class TestScaffolderPackage : AsyncPackage
     {
         /// <summary>
         /// TestScaffolderPackage GUID string.
         /// </summary>
         private const string PackageGuidString = "6b0cf9bc-35f3-4637-9b8c-34f63c6b00ef";
+        private const string EditorWindowContextGuid = "DCAB817C-68D8-49E0-92DA-435D12F840D0";
 
         #region Package Members
 

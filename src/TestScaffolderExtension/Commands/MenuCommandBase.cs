@@ -39,14 +39,14 @@ namespace TestScaffolderExtension.Commands
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuCommand = new OleMenuCommand(this.Execute, menuCommandID);
-            AddBeforeQueryStatus(menuCommand);
+            //AddBeforeQueryStatus(menuCommand);
             commandService.AddCommand(menuCommand);
         }
 
-        protected virtual void AddBeforeQueryStatus(OleMenuCommand menuCommand)
-        {
-            return;
-        }
+        //protected virtual void AddBeforeQueryStatus(OleMenuCommand menuCommand)
+        //{
+        //    return;
+        //}
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -55,14 +55,14 @@ namespace TestScaffolderExtension.Commands
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private void Execute(object sender, EventArgs e)
+        private async void Execute(object sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!(sender is OleMenuCommand menuCommand)) return;
 
             try
             {
-                ExecuteCommandAsync(menuCommand);
+                await ExecuteCommandAsync(menuCommand);
             }
             catch (Exception ex)
             {

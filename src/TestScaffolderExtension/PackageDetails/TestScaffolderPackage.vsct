@@ -97,9 +97,16 @@
     </CommandPlacement>
   </CommandPlacements>
 
+  <VisibilityConstraints>
+    <VisibilityItem guid="guidTestScaffolderPackageProjectNodeContextMenuCmdSet" id="cmdidCreateUIAutomationTestsCommand" context="guidPackageLoadUIContext"/>
+    <VisibilityItem guid="guidTestScaffolderPackageEditorWindowCmdSet" id="CreateUnitTestsForMethodCommandId" context="guidPackageLoadUIContext"/>
+  </VisibilityConstraints>
+  
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidTestScaffolderPackage" value="{6b0cf9bc-35f3-4637-9b8c-34f63c6b00ef}" />
+
+    <GuidSymbol name="guidPackageLoadUIContext" value ="{DCAB817C-68D8-49E0-92DA-435D12F840D0}"/>
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidTestScaffolderPackageEditorWindowCmdSet" value="{fd172596-85cf-4600-937d-4e3aa4401eb2}">
