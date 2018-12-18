@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="b0d25dd6-8468-40d0-9f67-2badde83bf05" Version="1.0.1" Language="en-US" Publisher="sevencorners" />
+        <Identity Id="b0d25dd6-8468-40d0-9f67-2badde83bf05" Version="1.0.2" Language="en-US" Publisher="sevencorners" />
         <DisplayName>Test Scaffolder Extension</DisplayName>
         <Description xml:space="preserve">Automatically scaffolds test files with boilerplate code and structure.</Description>
         <Icon>Resources\SevenCornersLogo.png</Icon>
