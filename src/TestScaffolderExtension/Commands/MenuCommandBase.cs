@@ -82,7 +82,7 @@
             }
             catch (Exception ex)
             {
-                this.ShowError("Not a project or project folder", ex.Message);
+                this.ShowError("Something Went Wrong", ex.Message);
             }
         }
     }

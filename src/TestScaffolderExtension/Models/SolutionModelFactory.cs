@@ -34,14 +34,22 @@
         public static async Task<SolutionModelBase> BuildHierarchyTreeDownAsync(SolutionModelBase parent, Project project)
         {
             var current = await BuildCurrentNodeAsync(parent, project);
-            await current.IterateChildrenAsync();
+            if (current != null)
+            {
+                await current.IterateChildrenAsync();
+            }
+
             return current;
         }
 
         public static async Task<SolutionModelBase> BuildHierarchyTreeDownAsync(SolutionModelBase parent, ProjectItem projectItem)
         {
             var current = await BuildCurrentNodeAsync(parent, projectItem);
-            await current.IterateChildrenAsync();
+            if (current != null)
+            {
+                await current.IterateChildrenAsync();
+            }
+
             return current;
         }
 

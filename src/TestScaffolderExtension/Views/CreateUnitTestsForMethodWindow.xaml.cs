@@ -58,7 +58,7 @@
                 if (createFolderResult.HasValue && createFolderResult.Value)
                 {
                     var newFolder = await this.viewModel.SelectedItem.CreateFolderAsync(createFolderViewModel.NewFolderName);
-                    newFolder.IsSelected = true;
+                    newFolder.SelectAndExpandParents();
                 }
             }
         }

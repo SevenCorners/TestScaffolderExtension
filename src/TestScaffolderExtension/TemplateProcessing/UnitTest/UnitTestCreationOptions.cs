@@ -1,5 +1,6 @@
 ﻿namespace TestScaffolderExtension.Processors
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.CodeAnalysis;
@@ -18,7 +19,7 @@
         public UnitTestCreationOptions(MethodDeclarationSyntax method, SemanticModel semanticModel)
             : this()
         {
-            this.SetRoslynValues(method, semanticModel);
+            this.SetUnitTestCreationValues(method, semanticModel);
         }
 
         public ConstructorInformation ClassUnderTestConstructor { get; private set; }
@@ -145,7 +146,7 @@
             }).ToList();
         }
 
-        private void SetRoslynValues(MethodDeclarationSyntax method, SemanticModel semanticModel)
+        private void SetUnitTestCreationValues(MethodDeclarationSyntax method, SemanticModel semanticModel)
         {
             this.MethodUnderTestName = method.Identifier.ValueText;
             this.UnitTestClassName = this.MethodUnderTestName;

@@ -7,6 +7,7 @@
     using Microsoft.CodeAnalysis.Text;
     using Microsoft.VisualStudio.ComponentModelHost;
     using Microsoft.VisualStudio.Editor;
+    using Microsoft.VisualStudio.LanguageServices;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.TextManager.Interop;
@@ -68,12 +69,12 @@
 
             var unitTestCreationOptions = new UnitTestCreationOptions(method, semanticModel);
 
-            await this.CreateTestsAsync(unitTestCreationOptions);
+            await this.CreateTestsAsync(document.FilePath, unitTestCreationOptions);
         }
 
-        private async Task CreateTestsAsync(UnitTestCreationOptions unitTestCreationOptions)
+        private async Task CreateTestsAsync(string filePath, UnitTestCreationOptions unitTestCreationOptions)
         {
-            var locationForTest = await this.ShowCreateUnitTestsForMethodModalWindowAsync(unitTestCreationOptions);
+            var locationForTest = await this.ShowCreateUnitTestsForMethodModalWindowAsync(filePath, unitTestCreationOptions);
             if (locationForTest != null)
             {
                 var unitTestFiles = await UnitTestTemplateInstantiator.InstantiateUnitTestTemplateAsync(locationForTest, unitTestCreationOptions);
@@ -104,10 +105,14 @@
                 .BufferPosition;
         }
 
-        private async Task<ProjectModelBase> ShowCreateUnitTestsForMethodModalWindowAsync(UnitTestCreationOptions unitTestCreationOptions)
+        private async Task<ProjectModelBase> ShowCreateUnitTestsForMethodModalWindowAsync(string filePath, UnitTestCreationOptions unitTestCreationOptions)
         {
             var solutionModel = await this.VisualStudio.GetSolutionAsync();
-            var createUnitTestsViewModel = new CreateUnitTestsViewModel(solutionModel, unitTestCreationOptions);
+
+            var componentModel = await this.AsyncServiceProvider
+                .GetAsAsync<SComponentModel, IComponentModel>();
+            var workspace = componentModel.GetService<VisualStudioWorkspace>();
+            var createUnitTestsViewModel = new CreateUnitTestsViewModel(solutionModel, unitTestCreationOptions, workspace, filePath);
 
             var createUnitTestsForMethodWindow = new CreateUnitTestsForMethodWindow(createUnitTestsViewModel)
             {
