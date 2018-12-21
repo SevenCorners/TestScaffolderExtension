@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     internal class CommandException : Exception
     {
         public CommandException(string title, string message)

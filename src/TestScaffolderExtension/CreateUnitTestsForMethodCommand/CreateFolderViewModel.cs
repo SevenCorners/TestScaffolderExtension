@@ -1,7 +1,7 @@
-﻿using TestScaffolderExtension.Common.View;
-
-namespace TestScaffolderExtension.CreateUnitTestsForMethodCommand
+﻿namespace TestScaffolderExtension.CreateUnitTestsForMethodCommand
 {
+    using TestScaffolderExtension.Common.View;
+
     public class CreateFolderViewModel : ViewModelBase
     {
         private string newFolderName;
