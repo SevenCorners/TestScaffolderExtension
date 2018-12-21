@@ -84,15 +84,16 @@
 
         internal void SelectAndExpandParents()
         {
-            this.ExpandParents();
             this.IsSelected = true;
+            this.ExpandParents();
         }
 
         private void ExpandParents()
         {
+            this.IsExpanded = true;
+
             if (this.Parent != null)
             {
-                this.Parent.IsExpanded = true;
                 this.Parent.ExpandParents();
             }
         }

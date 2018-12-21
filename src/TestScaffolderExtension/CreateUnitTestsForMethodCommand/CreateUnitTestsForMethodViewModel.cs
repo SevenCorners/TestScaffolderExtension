@@ -44,9 +44,9 @@
             }
         }
 
-        public string UnitTestBaseClassName => this.analyzerResult.UnitTestCreationDetails.UnitTestBaseClassName;
+        public string UnitTestBaseClassName => this.analyzerResult?.UnitTestCreationDetails?.UnitTestBaseClassName;
 
-        public string UnitTestFolderName => this.analyzerResult.UnitTestCreationDetails.UnitTestFolderName;
+        public string UnitTestFolderName => this.analyzerResult?.UnitTestCreationDetails?.UnitTestFolderName;
 
         public bool CreateFolderCheckboxChecked
         {

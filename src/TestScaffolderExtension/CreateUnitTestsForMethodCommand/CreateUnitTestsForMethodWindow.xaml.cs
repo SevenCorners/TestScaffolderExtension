@@ -1,6 +1,7 @@
 ﻿namespace TestScaffolderExtension.CreateUnitTestsForMethodCommand
 {
     using System.Windows;
+    using System.Windows.Controls;
 
     /// <inheritdoc cref="BaseDialogWindow" />
     /// <summary>
@@ -60,6 +61,19 @@
                     newFolder.SelectAndExpandParents();
                 }
             }
+        }
+
+        private void TreeView_Expanded(object sender, RoutedEventArgs e)
+        {
+            var treeViewItem = e.OriginalSource as TreeViewItem;
+            if (!treeViewItem.IsSelected)
+            {
+                return;
+            }
+
+            var windowBounds = new Rect(0, 0, this.Width, this.Height * .5);
+            treeViewItem?.BringIntoView(windowBounds);
+            treeViewItem?.Focus();
         }
     }
 }
