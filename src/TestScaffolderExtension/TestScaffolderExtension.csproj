@@ -57,82 +57,88 @@
     <CodeAnalysisRuleSet>TestScaffolderExtension.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateUIAutomationTestsCommand.cs" />
-    <Compile Include="Extensions\IAsyncServiceProviderExtensions.cs" />
-    <Compile Include="Models\VisualStudioObjectModel.cs" />
-    <Compile Include="Commands\MenuCommandBase.cs" />
-    <Compile Include="Models\AutomationTestType.cs" />
-    <Compile Include="Models\Solution\FileModel.cs" />
-    <Compile Include="Models\Solution\ProjectFolderModel.cs" />
-    <Compile Include="Models\Solution\ProjectModelBase.cs" />
-    <Compile Include="Models\Solution\SolutionModel.cs" />
-    <Compile Include="Models\Solution\SolutionFolderModel.cs" />
-    <Compile Include="Models\Solution\SolutionModelBase.cs" />
-    <Compile Include="Models\Solution\ProjectModel.cs" />
-    <Compile Include="Models\Analysis\ParameterInformation.cs" />
-    <Compile Include="Models\Analysis\ConstructorInformation.cs" />
-    <Compile Include="Models\Analysis\ConstructorType.cs" />
-    <Compile Include="Models\SolutionModelFactory.cs" />
-    <Compile Include="TemplateProcessing\UIAutomationTest\UIAutomationTestCreationOptions.cs" />
-    <Compile Include="TemplateProcessing\UIAutomationTest\UIAutomationTestTemplateInstantiator.cs" />
-    <Compile Include="Templates\UIAutomationTest\AutomationTemplateDetails.cs" />
-    <Compile Include="Templates\UIAutomationTest\PageElementMapTemplate.cs">
+    <Compile Include="Common\Command\CommandException.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\CreateUIAutomationTestsCommand.cs" />
+    <Compile Include="Common\Extensions\IAsyncServiceProviderExtensions.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\MethodUnderTestAnalyzer.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\MethodUnderTestAnalyzerResult.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\MethodUnderTestInfo.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\VisualStudioObjectModel.cs" />
+    <Compile Include="Common\Command\MenuCommandBase.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Models\AutomationTestType.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\FileModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\ProjectFolderModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\ProjectModelBase.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\SolutionModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\SolutionFolderModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\SolutionModelBase.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Solution\ProjectModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Analysis\ParameterInformation.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Analysis\ConstructorInformation.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\Analysis\ConstructorType.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Models\SolutionModelFactory.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\TemplateProcessing\UIAutomationTestCreationOptions.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\TemplateProcessing\UIAutomationTestTemplateInstantiator.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\AutomationTemplateDetails.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\PageElementMapTemplate.cs">
       <DependentUpon>PageElementMapTemplate.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Templates\UIAutomationTest\PageTemplateCode.cs" />
-    <Compile Include="Templates\UIAutomationTest\PageElementMapTemplateCode.cs" />
-    <Compile Include="Templates\UIAutomationTest\PageValidatorTemplateCode.cs" />
-    <Compile Include="Templates\UIAutomationTest\TestTemplateCode.cs" />
-    <Compile Include="Templates\UIAutomationTest\TestTemplate.cs">
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\PageTemplateCode.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\PageElementMapTemplateCode.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\PageValidatorTemplateCode.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\TestTemplateCode.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\TestTemplate.cs">
       <DependentUpon>TestTemplate.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Templates\UIAutomationTest\PageTemplate.cs">
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\PageTemplate.cs">
       <DependentUpon>PageTemplate.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Templates\UIAutomationTest\PageValidatorTemplate.cs">
+    <Compile Include="CreateUIAutomationTestsCommand\Templates\PageValidatorTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PageValidatorTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="Templates\UnitTest\TestBaseClassTemplate.cs">
+    <Compile Include="CreateUnitTestsForMethodCommand\RecommendedUnitTestLocationInfo.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Templates\TestBaseClassTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TestBaseClassTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="Templates\UnitTest\TestBaseClassTemplateCode.cs" />
-    <Compile Include="Templates\UnitTest\TestClassTemplate.cs">
+    <Compile Include="CreateUnitTestsForMethodCommand\Templates\TestBaseClassTemplateCode.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Templates\TestClassTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TestClassTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="Templates\UnitTest\TestClassTemplateCode.cs" />
-    <Compile Include="ViewModels\CreateFolderViewModel.cs" />
-    <Compile Include="ViewModels\CreateUIAutomationTestsViewModel.cs" />
-    <Compile Include="Views\BaseDialogWindow.cs" />
-    <Compile Include="Commands\CreateUnitTestsForMethodCommand.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\Templates\TestClassTemplateCode.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\CreateFolderViewModel.cs" />
+    <Compile Include="CreateUIAutomationTestsCommand\CreateUIAutomationTestsViewModel.cs" />
+    <Compile Include="Common\View\BaseDialogWindow.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\CreateUnitTestsForMethodCommand.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\UnitTestCreationOptions.cs" />
     <Compile Include="PackageDetails\TestScaffolderPackage.cs" />
-    <Compile Include="Views\Converters\EnumToBooleanConverter.cs" />
-    <Compile Include="Views\CreateFolderWindow.xaml.cs">
+    <Compile Include="Common\View\Converters\EnumToBooleanConverter.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\CreateFolderWindow.xaml.cs">
       <DependentUpon>CreateFolderWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CreateUIAutomationTestsWindow.xaml.cs">
+    <Compile Include="CreateUIAutomationTestsCommand\CreateUIAutomationTestsWindow.xaml.cs">
       <DependentUpon>CreateUIAutomationTestsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CreateUnitTestsForMethodWindow.xaml.cs">
+    <Compile Include="CreateUnitTestsForMethodCommand\CreateUnitTestsForMethodWindow.xaml.cs">
       <DependentUpon>CreateUnitTestsForMethodWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TemplateProcessing\UnitTest\UnitTestCreationOptions.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\TemplateProcessing\UnitTestCreationDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\CreateUnitTestsViewModel.cs" />
-    <Compile Include="ViewModels\SolutionItemViewModel.cs" />
-    <Compile Include="TemplateProcessing\UnitTest\UnitTestTemplateInstantiator.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\CreateUnitTestsForMethodViewModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\SolutionItemViewModel.cs" />
+    <Compile Include="CreateUnitTestsForMethodCommand\TemplateProcessing\UnitTestTemplateInstantiator.cs" />
+    <Compile Include="Common\View\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -154,27 +160,27 @@
     </Content>
     <None Include="Resources\SevenCornersLogoBitmap.png" />
     <None Include="Resources\SevenCornersLogoGray.ico" />
-    <Content Include="Templates\UIAutomationTest\PageElementMapTemplate.tt">
+    <Content Include="CreateUIAutomationTestsCommand\Templates\PageElementMapTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>PageElementMapTemplate.cs</LastGenOutput>
     </Content>
-    <Content Include="Templates\UIAutomationTest\TestTemplate.tt">
+    <Content Include="CreateUIAutomationTestsCommand\Templates\TestTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>TestTemplate.cs</LastGenOutput>
     </Content>
-    <Content Include="Templates\UIAutomationTest\PageTemplate.tt">
+    <Content Include="CreateUIAutomationTestsCommand\Templates\PageTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>PageTemplate.cs</LastGenOutput>
     </Content>
-    <Content Include="Templates\UIAutomationTest\PageValidatorTemplate.tt">
+    <Content Include="CreateUIAutomationTestsCommand\Templates\PageValidatorTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>PageValidatorTemplate.cs</LastGenOutput>
     </Content>
-    <Content Include="Templates\UnitTest\TestBaseClassTemplate.tt">
+    <Content Include="CreateUnitTestsForMethodCommand\Templates\TestBaseClassTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>TestBaseClassTemplate.cs</LastGenOutput>
     </Content>
-    <Content Include="Templates\UnitTest\TestClassTemplate.tt">
+    <Content Include="CreateUnitTestsForMethodCommand\Templates\TestClassTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>TestClassTemplate.cs</LastGenOutput>
     </Content>
@@ -476,15 +482,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\CreateFolderWindow.xaml">
+    <Page Include="CreateUnitTestsForMethodCommand\CreateFolderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CreateUIAutomationTestsWindow.xaml">
+    <Page Include="CreateUIAutomationTestsCommand\CreateUIAutomationTestsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CreateUnitTestsForMethodWindow.xaml">
+    <Page Include="CreateUnitTestsForMethodCommand\CreateUnitTestsForMethodWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
