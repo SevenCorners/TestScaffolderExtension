@@ -136,7 +136,7 @@
             var currentItem = matchingProject;
             while (currentIndex < pathFromProject.Length)
             {
-                var itemToRecommend = matchingProject.Children.FirstOrDefault(i => i.Name == pathFromProject[currentIndex]);
+                var itemToRecommend = currentItem.Children.FirstOrDefault(i => i.Name == pathFromProject[currentIndex]);
                 if (itemToRecommend == null)
                 {
                     break;
